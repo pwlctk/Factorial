@@ -27,8 +27,7 @@ public class DialogUtils {
         confirmationAlert.initOwner(Main.getStage());
         confirmationAlert.setTitle(bundle.getString("exit.title"));
         confirmationAlert.setHeaderText(bundle.getString("exit.header"));
-        Optional<ButtonType> result = confirmationAlert.showAndWait();
-        return result;
+        return confirmationAlert.showAndWait();
 
     }
 

@@ -9,7 +9,7 @@ import pl.pwlctk.utils.FxmlUtils;
 
 public class Main extends Application {
 
-    public static final String FXML_MAIN_WINDOW_FXML = "/fxml/mainWindow.fxml";
+    private static final String FXML_MAIN_WINDOW_FXML = "/fxml/mainWindow.fxml";
     public static final String LANGUAGE ="pl";
     private static Stage stage; //Musiałem tak zrobic, aby dzialalo setAlwaysOnTop w MainController
 
