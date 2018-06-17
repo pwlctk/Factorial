@@ -9,104 +9,95 @@
 <BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.pwlctk.controllers.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" onShown="#checkResultText" text="%file">
-                    <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="New" visible="false" />
-                        <MenuItem fx:id="saveToFileMenuItem" disable="true" mnemonicParsing="false" onAction="#saveToFile" text="%file.save" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%close" />
-                    </items>
+            <Menu mnemonicParsing="false" onShown="#checkResultText" text="%file">
+                <MenuItem disable="true" mnemonicParsing="false" text="New" visible="false"/>
+                <MenuItem fx:id="saveToFileMenuItem" disable="true" mnemonicParsing="false" onAction="#saveToFile"
+                          text="%file.save"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%close"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="%edit">
+                <RadioMenuItem mnemonicParsing="false" onAction="#setModerna" selected="true" text="%moderna">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="styleGroup"/>
+                    </toggleGroup>
+                </RadioMenuItem>
+                <RadioMenuItem mnemonicParsing="false" onAction="#setCaspian" text="%caspian"
+                               toggleGroup="$styleGroup"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <Menu mnemonicParsing="false" text="%language">
+                    <RadioMenuItem fx:id="polishRadioMenu" mnemonicParsing="false" onAction="#switchToPolish"
+                                   text="%language.polish"/>
+                    <RadioMenuItem fx:id="englishRadioMenu" mnemonicParsing="false" onAction="#switchToEnglish"
+                                   text="%language.english"/>
                 </Menu>
-                <Menu mnemonicParsing="false" text="%edit">
-                    <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setModerna" selected="true" text="%moderna">
-                            <toggleGroup>
-                                <ToggleGroup fx:id="styleGroup" />
-                            </toggleGroup>
-                        </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#setCaspian" text="%caspian" toggleGroup="$styleGroup" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="%language">
-                            <items>
-                                <RadioMenuItem fx:id="switchLanguageToPolish" mnemonicParsing="false" onAction="#switchToPolish" selected="true" text="%language.polish">
-                                    <toggleGroup>
-                                        <ToggleGroup fx:id="languageGroup" />
-                                    </toggleGroup>
-                                </RadioMenuItem>
-                                <RadioMenuItem fx:id="switchLanguageToEnglish" mnemonicParsing="false" onAction="#switchToEnglish" text="%language.english" toggleGroup="$languageGroup" />
-                            </items>
-                        </Menu>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <CheckMenuItem mnemonicParsing="false" onAction="#setAlwaysOnTop" text="%alwaysOnTop" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Info">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#about" text="%about" />
-                    </items>
-                </Menu>
-            </menus>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <CheckMenuItem fx:id="alwaysOnTopMenuItem" mnemonicParsing="false" onAction="#setAlwaysOnTop"
+                               text="%alwaysOnTop"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Info">
+                <MenuItem mnemonicParsing="false" onAction="#about" text="%about"/>
+            </Menu>
         </MenuBar>
     </top>
     <center>
         <BorderPane>
             <center>
                 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                    <children>
-                        <BorderPane>
-                            <left>
-                                <Label alignment="BOTTOM_LEFT" text="%factorial.result" BorderPane.alignment="CENTER">
-                                    <font>
-                                        <Font name="Calibri" size="16.0" />
-                                    </font>
-                                    <BorderPane.margin>
-                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                    </BorderPane.margin>
-                                </Label>
-                            </left>
-                            <right>
-                                <TextField fx:id="calculateTimeField" disable="true" editable="false" BorderPane.alignment="CENTER">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                                    <BorderPane.margin>
-                                        <Insets left="10.0" right="10.0" />
-                                    </BorderPane.margin>
-                                </TextField>
-                            </right>
-                            <center>
-                                <Label fx:id="calculateTimeLabel" alignment="CENTER_RIGHT" disable="true" text="%factorial.calculateTime" BorderPane.alignment="CENTER_RIGHT">
-                                    <font>
-                                        <Font size="16.0" />
-                                    </font>
-                           <BorderPane.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </BorderPane.margin>
-                                </Label>
-                            </center>
-                        </BorderPane>
-                        <TextArea fx:id="resultTextArea" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" wrapText="true" VBox.vgrow="ALWAYS">
-                            <VBox.margin>
-                                <Insets left="10.0" right="10.0" />
-                            </VBox.margin>
-                        </TextArea>
-                    </children>
+                    <BorderPane>
+                        <left>
+                            <Label alignment="BOTTOM_LEFT" text="%factorial.result" BorderPane.alignment="CENTER">
+                                <font>
+                                    <Font name="Calibri" size="16.0"/>
+                                </font>
+                                <BorderPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                </BorderPane.margin>
+                            </Label>
+                        </left>
+                        <right>
+                            <TextField fx:id="calculateTimeField" disable="true" editable="false"
+                                       BorderPane.alignment="CENTER">
+                                <font>
+                                    <Font size="16.0"/>
+                                </font>
+                                <BorderPane.margin>
+                                    <Insets left="10.0" right="10.0"/>
+                                </BorderPane.margin>
+                            </TextField>
+                        </right>
+                        <center>
+                            <Label fx:id="calculateTimeLabel" alignment="CENTER_RIGHT" disable="true"
+                                   text="%factorial.calculateTime" BorderPane.alignment="CENTER_RIGHT">
+                                <font>
+                                    <Font size="16.0"/>
+                                </font>
+                                <BorderPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                </BorderPane.margin>
+                            </Label>
+                        </center>
+                    </BorderPane>
+                    <TextArea fx:id="resultTextArea" editable="false" maxHeight="1.7976931348623157E308"
+                              maxWidth="1.7976931348623157E308" wrapText="true" VBox.vgrow="ALWAYS">
+                        <VBox.margin>
+                            <Insets left="10.0" right="10.0"/>
+                        </VBox.margin>
+                    </TextArea>
                 </VBox>
             </center>
             <top>
                 <BorderPane BorderPane.alignment="CENTER">
                     <left>
-                        <ImageView fitHeight="85.0" fitWidth="170.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
-                            <image>
-                                <Image url="@../icons/factorial.png" />
-                            </image>
+                        <ImageView fitHeight="85.0" fitWidth="170.0" nodeOrientation="INHERIT" pickOnBounds="true"
+                                   preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
                             <cursor>
-                                <Cursor fx:constant="DEFAULT" />
+                                <Cursor fx:constant="DEFAULT"/>
                             </cursor>
                             <BorderPane.margin>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
                             </BorderPane.margin>
+                            <Image url="@../icons/factorial.png"/>
                         </ImageView>
                     </left>
                     <bottom>
@@ -126,9 +117,7 @@
                                     <graphic>
                                         <ImageView fitHeight="48.0" fitWidth="40.0" pickOnBounds="true"
                                                    preserveRatio="true">
-                                            <image>
-                                                <Image url="@../icons/calculateFactorial.png" />
-                                            </image>
+                                            <Image url="@../icons/calculateFactorial.png"/>
                                         </ImageView>
                                     </graphic>
                                     <font>
@@ -160,13 +149,12 @@
                         </BorderPane>
                     </bottom>
                     <right>
-                        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
-                            <image>
-                                <Image url="@../icons/einstein.png" />
-                            </image>
+                        <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true"
+                                   BorderPane.alignment="CENTER_RIGHT">
                             <BorderPane.margin>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
                             </BorderPane.margin>
+                            <Image url="@../icons/einstein.png"/>
                         </ImageView>
                     </right>
                     <center>
@@ -181,38 +169,36 @@
         </BorderPane>
     </center>
    <bottom>
-          <HBox alignment="BOTTOM_LEFT" fillHeight="false" prefHeight="0.0" prefWidth="779.0" BorderPane.alignment="CENTER">
-              <children>
-                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" text="%factorial.status">
-                      <HBox.margin>
-                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                      </HBox.margin>
-                  </Label>
-                  <Label fx:id="statusMessage" text="%factorial.statusMessageReady">
-                      <HBox.margin>
-                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                      </HBox.margin>
-                  </Label>
-            <BorderPane HBox.hgrow="ALWAYS">
+       <HBox alignment="BOTTOM_LEFT" fillHeight="false" prefHeight="0.0" prefWidth="779.0"
+             BorderPane.alignment="CENTER">
+           <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" text="%factorial.status">
+               <HBox.margin>
+                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+               </HBox.margin>
+           </Label>
+           <Label fx:id="statusMessage" text="%factorial.statusMessageReady">
+               <HBox.margin>
+                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+               </HBox.margin>
+           </Label>
+           <BorderPane HBox.hgrow="ALWAYS">
                <cursor>
-                  <Cursor fx:constant="DEFAULT" />
+                   <Cursor fx:constant="DEFAULT"/>
                </cursor>
-            </BorderPane>
-            <HBox alignment="BOTTOM_LEFT">
-               <children>
-                  <Label fx:id="numberOfDigitsLabel" alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" disable="true" nodeOrientation="LEFT_TO_RIGHT" text="%factorial.numberDigitsLabel">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </Label>
-                  <TextField fx:id="numberOfDigitsField" alignment="BOTTOM_RIGHT" disable="true" editable="false">
-                     <HBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </HBox.margin>
-                  </TextField>
-               </children>
-            </HBox>
-              </children>
-          </HBox>
+           </BorderPane>
+           <HBox alignment="BOTTOM_LEFT">
+               <Label fx:id="numberOfDigitsLabel" alignment="BOTTOM_RIGHT" contentDisplay="BOTTOM" disable="true"
+                      nodeOrientation="LEFT_TO_RIGHT" text="%factorial.numberDigitsLabel">
+                   <HBox.margin>
+                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                   </HBox.margin>
+               </Label>
+               <TextField fx:id="numberOfDigitsField" alignment="BOTTOM_RIGHT" disable="true" editable="false">
+                   <HBox.margin>
+                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                   </HBox.margin>
+               </TextField>
+           </HBox>
+       </HBox>
    </bottom>
 </BorderPane>

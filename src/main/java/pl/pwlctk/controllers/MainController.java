@@ -4,8 +4,10 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pl.pwlctk.Main;
@@ -15,15 +17,17 @@ import pl.pwlctk.utils.FxmlUtils;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static pl.pwlctk.utils.FxmlUtils.getResourcebundle;
 
-public class MainController {
+public class MainController implements Initializable {
 
     @FXML
     private static ResourceBundle bundle = getResourcebundle();
@@ -53,6 +57,15 @@ public class MainController {
     public Label calculateTimeLabel;
 
     @FXML
+    public RadioMenuItem polishRadioMenu;
+
+    @FXML
+    public RadioMenuItem englishRadioMenu;
+
+    @FXML
+    public CheckMenuItem alwaysOnTopMenuItem;
+
+    @FXML
     private TextField numberField;
 
     @FXML
@@ -61,9 +74,11 @@ public class MainController {
     @FXML
     public MenuItem saveToFileMenuItem;
 
+    private String message;
+
     @FXML
-    public void computeFactorial(ActionEvent actionEvent) {
-        String message = bundle.getString("factorial.statusMessageFinish");
+    public void computeFactorial() {
+        message = bundle.getString("factorial.statusMessageFinish");
         statusMessage.setText(message);
         BigInteger numberToCalculate = new BigInteger(numberField.getText());
         long startTime;
@@ -85,9 +100,8 @@ public class MainController {
     }
 
     @FXML
-    public void keyReleasedProperty(KeyEvent keyEvent) {
+    public void keyReleasedProperty() {
         String number = numberField.getText();
-        String message;
         boolean isDisabled = true;
         if (number.matches("[0-9]*")) {
             message = bundle.getString("factorial.statusMessageGo");
@@ -110,19 +124,10 @@ public class MainController {
         numberOfDigitsLabel.setDisable(true);
     }
 
-    private BigInteger calculateFactorial(BigInteger n) {
-        BigInteger result = BigInteger.ONE;
-        while (!n.equals(BigInteger.ZERO)) {
-            result = result.multiply(n);
-            n = n.subtract(BigInteger.ONE);
-        }
-        return result;
-    }
-
     @FXML
     public void closeApplication() {
-        Optional<ButtonType> result = DialogUtils.confirmationDialog();
-        if (result.get() == ButtonType.OK) {
+        Optional<ButtonType> exitButton = DialogUtils.confirmationDialog();
+        if (exitButton.get() == ButtonType.OK) {
             Platform.exit();
             System.exit(0);
         }
@@ -143,25 +148,27 @@ public class MainController {
         DialogUtils.aboutApplication();
     }
 
+
     @FXML
     public void setAlwaysOnTop(ActionEvent actionEvent) {
         Stage stage = Main.getStage();
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         stage.setAlwaysOnTop(isSelected);
+
     }
 
     @FXML
-    public void switchToPolish(ActionEvent actionEvent) {
-        System.out.println("Polska!");
+    public void switchToPolish() {
+        changeLocale("pl");
     }
 
     @FXML
-    public void switchToEnglish(ActionEvent actionEvent) {
-        System.out.println("Nie Polska!");
+    public void switchToEnglish() {
+        changeLocale("en");
     }
 
     @FXML
-    public void saveToFile(ActionEvent actionEvent) {
+    public void saveToFile() {
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter save.extension
@@ -188,9 +195,28 @@ public class MainController {
         }
     }
 
+    @FXML
+    private void changeLocale(String language) {
+        Scene scene = Main.getScene();
+        try {
+            scene.setRoot(FXMLLoader.load(getClass().getResource("/fxml/mainWindow.fxml"), ResourceBundle.getBundle("bundles/messages", new Locale(language))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    private BigInteger calculateFactorial(BigInteger n) {
+        BigInteger result = BigInteger.ONE;
+        while (!n.equals(BigInteger.ZERO)) {
+            result = result.multiply(n);
+            n = n.subtract(BigInteger.ONE);
+        }
+        return result;
+    }
 
     private static void writeToDisk(String invocation, String path) {
-
         try {
             Files.write(Paths.get(path), invocation.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
@@ -198,5 +224,18 @@ public class MainController {
         }
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        switch (resources.getLocale().getLanguage()) {
+            case "en":
+                englishRadioMenu.setSelected(true);
+                break;
+            case "pl":
+                polishRadioMenu.setSelected(true);
+                break;
+            default:
+                break;
+        }
 
+    }
 }

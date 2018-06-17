@@ -7,15 +7,11 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static pl.pwlctk.Main.LANGUAGE;
-
-
 public class FxmlUtils {
-
 
     public static Pane fxmlLoader(String fxmlPath) {
         FXMLLoader loader = new FXMLLoader(FxmlUtils.class.getResource(fxmlPath));
-        Locale.setDefault(new Locale(LANGUAGE));
+        Locale.setDefault(new Locale("pl"));
 
         loader.setResources(getResourcebundle());
         try {
@@ -28,5 +24,10 @@ public class FxmlUtils {
 
     public static ResourceBundle getResourcebundle() {
         return ResourceBundle.getBundle("bundles/messages");
+    }
+
+    public static void setResourcesBundle(String locale) {
+        Locale.setDefault(new Locale(locale));
+
     }
 }

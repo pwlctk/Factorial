@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import pl.pwlctk.Main;
+
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -11,7 +12,7 @@ import static pl.pwlctk.utils.FxmlUtils.getResourcebundle;
 
 public class DialogUtils {
 
-    static ResourceBundle bundle = getResourcebundle();
+    private static ResourceBundle bundle = getResourcebundle();
 
     public static void aboutApplication() {
         Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -31,7 +32,7 @@ public class DialogUtils {
 
     }
 
-    public static void errorDialog(String error) {
+    static void errorDialog(String error) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.initOwner(Main.getStage());
         errorAlert.setTitle(bundle.getString("error.title"));
@@ -41,6 +42,4 @@ public class DialogUtils {
         errorAlert.getDialogPane().setContent(textArea);
         errorAlert.showAndWait();
     }
-
-
 }
