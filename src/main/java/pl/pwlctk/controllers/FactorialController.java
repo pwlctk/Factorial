@@ -2,10 +2,7 @@ package pl.pwlctk.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 
 import java.math.BigInteger;
@@ -16,6 +13,9 @@ import static pl.pwlctk.utils.FxmlUtils.getResourcebundle;
 public class FactorialController {
 
     static ResourceBundle bundle = getResourcebundle();
+    String message;
+    private static String result;
+    private static String factorialNumber;
 
     @FXML
     public Label statusMessage;
@@ -35,14 +35,13 @@ public class FactorialController {
     @FXML
     private Button computeButton;
 
-    String message;
+
 
     @FXML
     public void computeFactorial(ActionEvent actionEvent) {
         message = bundle.getString("factorial.statusMessageFinish");
         statusMessage.setText(message);
         BigInteger numberToCalculate = new BigInteger(numberField.getText());
-        String result;
         long startTime;
         long endTime;
 
@@ -54,6 +53,9 @@ public class FactorialController {
         resultTextArea.setText(result);
         calculateTimeField.setDisable(false);
         calculateTimeLabel.setDisable(false);
+
+        factorialNumber = numberField.getText();
+
     }
 
     public void keyReleasedProperty(KeyEvent keyEvent) {
@@ -86,4 +88,14 @@ public class FactorialController {
         }
         return result;
     }
+
+    public static String getResult() {
+        return result;
+    }
+
+    public static String getNumberField() {
+        return factorialNumber;
+    }
+
+
 }

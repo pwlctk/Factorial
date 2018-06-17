@@ -14,9 +14,9 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
-                <Menu mnemonicParsing="false" text="%file">
+                <Menu mnemonicParsing="false" onShown="#checkResultText" text="%file">
                     <items>
-                  <MenuItem mnemonicParsing="false" onAction="#saveToFile" text="%file.save" />
+                  <MenuItem fx:id="saveToFileMenuItem" disable="true" mnemonicParsing="false" onAction="#saveToFile" text="%file.save" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%close" />
                     </items>

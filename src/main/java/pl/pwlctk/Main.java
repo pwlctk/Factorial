@@ -6,8 +6,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.pwlctk.utils.FxmlUtils;
 
-import java.util.Locale;
-
 
 public class Main extends Application {
 
