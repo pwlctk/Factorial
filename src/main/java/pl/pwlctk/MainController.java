@@ -186,21 +186,22 @@ public class MainController implements Initializable {
             GuiState.longComputeTimeWarningLabelVisibility = false;
         }
 
-
-        computeButton.setDisable(isDisabled);
-        calculateTimeField.setDisable(true);
-        calculateTimeField.setText("");
-        calculateTimeLabel.setDisable(true);
-        numberOfDigitsField.setDisable(true);
-        numberOfDigitsField.setText("");
-        numberOfDigitsLabel.setDisable(true);
-        GuiState.computeButtonIsDisabled = isDisabled;
-        GuiState.calculateTimeFieldIsDisabled = true;
-        GuiState.calculateTimeFieldText = "";
-        GuiState.calculateTimeLabelIsDisabled = true;
-        GuiState.numberOfDigitsLabelIsDisabled = true;
-        GuiState.numberOfDigitsIsDisabled = true;
-        GuiState.numberOfDigitsText = "";
+        if (keyEvent.getCode() != KeyCode.ENTER) {
+            computeButton.setDisable(isDisabled);
+            calculateTimeField.setDisable(true);
+            calculateTimeField.setText("");
+            calculateTimeLabel.setDisable(true);
+            numberOfDigitsField.setDisable(true);
+            numberOfDigitsField.setText("");
+            numberOfDigitsLabel.setDisable(true);
+            GuiState.computeButtonIsDisabled = isDisabled;
+            GuiState.calculateTimeFieldIsDisabled = true;
+            GuiState.calculateTimeFieldText = "";
+            GuiState.calculateTimeLabelIsDisabled = true;
+            GuiState.numberOfDigitsLabelIsDisabled = true;
+            GuiState.numberOfDigitsIsDisabled = true;
+            GuiState.numberOfDigitsText = "";
+        }
     }
 
     @FXML
@@ -237,7 +238,6 @@ public class MainController implements Initializable {
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         stage.setAlwaysOnTop(isSelected);
         GuiState.alwaysOnTop = isSelected;
-
     }
 
     @FXML
@@ -365,9 +365,5 @@ public class MainController implements Initializable {
         numberOfDigitsField.setText(GuiState.numberOfDigitsText);
         numberOfDigitsField.setDisable(GuiState.numberOfDigitsIsDisabled);
         longComputeTimeWarningLabel.setVisible(GuiState.longComputeTimeWarningLabelVisibility);
-
-
     }
-
-
 }

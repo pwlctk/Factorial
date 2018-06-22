@@ -84,7 +84,8 @@
                             </Label>
                         </center>
                     </BorderPane>
-                    <TextArea fx:id="resultTextArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS">
+                    <TextArea fx:id="resultTextArea" editable="false" focusTraversable="false" wrapText="true"
+                              VBox.vgrow="ALWAYS">
                         <VBox.margin>
                             <Insets left="10.0" right="10.0"/>
                         </VBox.margin>
