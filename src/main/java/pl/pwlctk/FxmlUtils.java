@@ -1,4 +1,4 @@
-package pl.pwlctk.utils;
+package pl.pwlctk;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -11,18 +11,24 @@ public class FxmlUtils {
 
     public static Pane fxmlLoader(String fxmlPath) {
         FXMLLoader loader = new FXMLLoader(FxmlUtils.class.getResource(fxmlPath));
-        Locale.setDefault(new Locale("pl"));
+        //Locale.setDefault(new Locale("pl"));
 
-        loader.setResources(getResourcebundle());
+        loader.setResources(getResourcebundle("pl"));
         try {
             return loader.load();
         } catch (IOException e) {
-            DialogUtils.errorDialog(e.getMessage());
+            e.getMessage();
         }
         return null;
     }
 
+    public static ResourceBundle getResourcebundle(String locale) {
+
+        return ResourceBundle.getBundle("bundles/messages", new Locale(locale));
+    }
+
     public static ResourceBundle getResourcebundle() {
+
         return ResourceBundle.getBundle("bundles/messages");
     }
 
@@ -30,4 +36,6 @@ public class FxmlUtils {
         Locale.setDefault(new Locale(locale));
 
     }
+
+
 }
