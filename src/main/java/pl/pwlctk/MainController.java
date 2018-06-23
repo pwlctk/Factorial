@@ -185,23 +185,8 @@ public class MainController implements Initializable {
             longComputeTimeWarningLabel.setVisible(false);
             GuiState.longComputeTimeWarningLabelVisibility = false;
         }
-
-        if (keyEvent.getCode() != KeyCode.ENTER) {
-            computeButton.setDisable(isDisabled);
-            calculateTimeField.setDisable(true);
-            calculateTimeField.setText("");
-            calculateTimeLabel.setDisable(true);
-            numberOfDigitsField.setDisable(true);
-            numberOfDigitsField.setText("");
-            numberOfDigitsLabel.setDisable(true);
-            GuiState.computeButtonIsDisabled = isDisabled;
-            GuiState.calculateTimeFieldIsDisabled = true;
-            GuiState.calculateTimeFieldText = "";
-            GuiState.calculateTimeLabelIsDisabled = true;
-            GuiState.numberOfDigitsLabelIsDisabled = true;
-            GuiState.numberOfDigitsIsDisabled = true;
-            GuiState.numberOfDigitsText = "";
-        }
+        computeButton.setDisable(isDisabled);
+        GuiState.computeButtonIsDisabled = isDisabled;
     }
 
     @FXML
