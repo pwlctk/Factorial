@@ -1,7 +1,7 @@
 package pl.pwlctk;
 
 
-public class GuiState {
+public class ProgramData {
 
     //Menu Items
     static boolean alwaysOnTop;

@@ -17,9 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -115,78 +112,74 @@ public class MainController implements Initializable {
 
     @FXML
     public void computeFactorial() {
-        message = bundle.getString("factorial.statusMessageFinish");
-        GuiState.statusMessageId = 3;
-        statusMessage.setText(message);
+        ProgramData.statusMessageId = 3;
+        statusMessage.setText(bundle.getString("factorial.statusMessageFinish"));
         BigInteger numberToCalculate = new BigInteger(numberField.getText());
         long startTime;
         long endTime;
 
         startTime = System.currentTimeMillis();
-        GuiState.result = calculateFactorial(numberToCalculate).toString();
+        ProgramData.result = Factorial.calculateFactorial(numberToCalculate).toString();
         endTime = System.currentTimeMillis();
 
         calculateTimeField.setText(endTime - startTime + " ms");
-        resultTextArea.setText(GuiState.result);
+        resultTextArea.setText(ProgramData.result);
         calculateTimeField.setDisable(false);
         calculateTimeLabel.setDisable(false);
 
         factorialNumber = numberField.getText();
         numberOfDigitsField.setDisable(false);
         numberOfDigitsLabel.setDisable(false);
-        numberOfDigitsField.setText(GuiState.result.length() + "");
+        numberOfDigitsField.setText(ProgramData.result.length() + "");
         saveToFileMenuItem.setDisable(false);
-        GuiState.calculateTimeLabelIsDisabled = false;
-        GuiState.calculateTimeFieldIsDisabled = false;
-        GuiState.calculateTimeFieldText = endTime - startTime + " ms";
-        GuiState.numberOfDigitsLabelIsDisabled = false;
-        GuiState.numberOfDigitsIsDisabled = false;
-        GuiState.numberOfDigitsText = GuiState.result.length() + "";
+        ProgramData.calculateTimeLabelIsDisabled = false;
+        ProgramData.calculateTimeFieldIsDisabled = false;
+        ProgramData.calculateTimeFieldText = endTime - startTime + " ms";
+        ProgramData.numberOfDigitsLabelIsDisabled = false;
+        ProgramData.numberOfDigitsIsDisabled = false;
+        ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
     }
 
     @FXML
     public void keyReleasedProperty(KeyEvent keyEvent) {
-        GuiState.numberFieldText = numberField.getText();
+        ProgramData.numberFieldText = numberField.getText();
         boolean isDisabled = true;
-        if (GuiState.numberFieldText.matches("[0-9]*")) {
-            message = bundle.getString("factorial.statusMessageGo");
-            GuiState.statusMessageId = 1;
-            statusMessage.setText(message);
-            isDisabled = (GuiState.numberFieldText.isEmpty());
-            if (keyEvent.getCode() == KeyCode.ENTER && !GuiState.numberFieldText.isEmpty()) {
+        if (ProgramData.numberFieldText.matches("[0-9]*")) {
+            ProgramData.statusMessageId = 1;
+            statusMessage.setText(bundle.getString("factorial.statusMessageGo"));
+            isDisabled = (ProgramData.numberFieldText.isEmpty());
+            if (keyEvent.getCode() == KeyCode.ENTER && !ProgramData.numberFieldText.isEmpty()) {
                 computeFactorial();
             }
 
         } else {
-            message = bundle.getString("factorial.statusMessageBadInput");
-            GuiState.statusMessageId = 2;
-            statusMessage.setText(message);
+            ProgramData.statusMessageId = 2;
+            statusMessage.setText(bundle.getString("factorial.statusMessageBadInput"));
 
         }
-        if (GuiState.numberFieldText.isEmpty()) {
-            message = bundle.getString("factorial.statusMessageReady");
-            GuiState.statusMessageId = 3;
-            statusMessage.setText(message);
+        if (ProgramData.numberFieldText.isEmpty()) {
+            ProgramData.statusMessageId = 3;
+            statusMessage.setText(bundle.getString("factorial.statusMessageReady"));
         }
 
 
-        if (numberField.getText().length() > 5 && GuiState.numberFieldText.matches("[0-9]*")) {
+        if (numberField.getText().length() > 5 && ProgramData.numberFieldText.matches("[0-9]*")) {
             longComputeTimeWarningLabel.setVisible(true);
-            GuiState.longComputeTimeWarningLabelVisibility = true;
+            ProgramData.longComputeTimeWarningLabelVisibility = true;
             longComputeTimeWarningLabel.setText(bundle.getString("longComputeTimeWarningLabel"));
-            GuiState.longComputeTimeWarningLabelId = 0;
-        } else if (!GuiState.numberFieldText.matches("[0-9]*")) {
+            ProgramData.longComputeTimeWarningLabelId = 0;
+        } else if (!ProgramData.numberFieldText.matches("[0-9]*")) {
             longComputeTimeWarningLabel.setVisible(true);
-            GuiState.longComputeTimeWarningLabelVisibility = true;
+            ProgramData.longComputeTimeWarningLabelVisibility = true;
             longComputeTimeWarningLabel.setText(bundle.getString("factorial.statusMessageBadInput"));
-            GuiState.longComputeTimeWarningLabelId = 1;
+            ProgramData.longComputeTimeWarningLabelId = 1;
 
         } else {
             longComputeTimeWarningLabel.setVisible(false);
-            GuiState.longComputeTimeWarningLabelVisibility = false;
+            ProgramData.longComputeTimeWarningLabelVisibility = false;
         }
         computeButton.setDisable(isDisabled);
-        GuiState.computeButtonIsDisabled = isDisabled;
+        ProgramData.computeButtonIsDisabled = isDisabled;
     }
 
     @FXML
@@ -201,14 +194,14 @@ public class MainController implements Initializable {
     @FXML
     public void setModerna() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
-        GuiState.modernaStyle = true;
+        ProgramData.modernaStyle = true;
 
     }
 
     @FXML
     public void setCaspian() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
-        GuiState.modernaStyle = false;
+        ProgramData.modernaStyle = false;
 
     }
 
@@ -222,7 +215,7 @@ public class MainController implements Initializable {
         Stage stage = Main.getStage();
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         stage.setAlwaysOnTop(isSelected);
-        GuiState.alwaysOnTop = isSelected;
+        ProgramData.alwaysOnTop = isSelected;
     }
 
     @FXML
@@ -234,24 +227,6 @@ public class MainController implements Initializable {
             e.printStackTrace();
         }
 
-    }
-
-
-    private BigInteger calculateFactorial(BigInteger n) {
-        BigInteger result = BigInteger.ONE;
-        while (!n.equals(BigInteger.ZERO)) {
-            result = result.multiply(n);
-            n = n.subtract(BigInteger.ONE);
-        }
-        return result;
-    }
-
-    private static void writeToDisk(String invocation, String path) {
-        try {
-            Files.write(Paths.get(path), invocation.getBytes(), StandardOpenOption.CREATE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -283,7 +258,7 @@ public class MainController implements Initializable {
         File file = fileChooser.showSaveDialog(Main.getStage());
 
         if (file != null) {
-            writeToDisk(GuiState.result, file.getPath());
+            SaveToDisk.writeToDisk(ProgramData.result, file.getPath());
         }
     }
 
@@ -301,54 +276,50 @@ public class MainController implements Initializable {
                 break;
         }
 
-        switch (GuiState.statusMessageId) {
+        switch (ProgramData.statusMessageId) {
             case 0:
-                message = bundle.getString("factorial.statusMessageReady");
-                statusMessage.setText(message);
+                statusMessage.setText(bundle.getString("factorial.statusMessageReady"));
                 break;
             case 1:
-                message = bundle.getString("factorial.statusMessageGo");
-                statusMessage.setText(message);
+                statusMessage.setText(bundle.getString("factorial.statusMessageGo"));
                 break;
             case 2:
-                message = bundle.getString("factorial.statusMessageBadInput");
-                statusMessage.setText(message);
+                statusMessage.setText(bundle.getString("factorial.statusMessageBadInput"));
                 break;
             case 3:
-                message = bundle.getString("factorial.statusMessageFinish");
-                statusMessage.setText(message);
+                statusMessage.setText(bundle.getString("factorial.statusMessageFinish"));
                 break;
         }
 
-        if (GuiState.modernaStyle) {
+        if (ProgramData.modernaStyle) {
             styleGroup.selectToggle(modernaRadioMenuItem);
         } else {
             styleGroup.selectToggle(caspianRadioMenuItem);
         }
 
 
-        if (GuiState.result.equals("")) {
+        if (ProgramData.result.equals("")) {
             saveToFileMenuItem.setDisable(true);
         } else {
             saveToFileMenuItem.setDisable(false);
         }
 
-        if (GuiState.longComputeTimeWarningLabelId == 0) {
+        if (ProgramData.longComputeTimeWarningLabelId == 0) {
             longComputeTimeWarningLabel.setText(bundle.getString("longComputeTimeWarningLabel"));
         } else {
             longComputeTimeWarningLabel.setText(bundle.getString("factorial.statusMessageBadInput"));
         }
 
-        alwaysOnTopMenuItem.setSelected(GuiState.alwaysOnTop);
-        resultTextArea.setText(GuiState.result);
-        numberField.setText(GuiState.numberFieldText);
-        computeButton.setDisable(GuiState.computeButtonIsDisabled);
-        calculateTimeField.setDisable(GuiState.calculateTimeFieldIsDisabled);
-        calculateTimeField.setText(GuiState.calculateTimeFieldText);
-        calculateTimeLabel.setDisable(GuiState.calculateTimeLabelIsDisabled);
-        numberOfDigitsLabel.setDisable(GuiState.numberOfDigitsLabelIsDisabled);
-        numberOfDigitsField.setText(GuiState.numberOfDigitsText);
-        numberOfDigitsField.setDisable(GuiState.numberOfDigitsIsDisabled);
-        longComputeTimeWarningLabel.setVisible(GuiState.longComputeTimeWarningLabelVisibility);
+        alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
+        resultTextArea.setText(ProgramData.result);
+        numberField.setText(ProgramData.numberFieldText);
+        computeButton.setDisable(ProgramData.computeButtonIsDisabled);
+        calculateTimeField.setDisable(ProgramData.calculateTimeFieldIsDisabled);
+        calculateTimeField.setText(ProgramData.calculateTimeFieldText);
+        calculateTimeLabel.setDisable(ProgramData.calculateTimeLabelIsDisabled);
+        numberOfDigitsLabel.setDisable(ProgramData.numberOfDigitsLabelIsDisabled);
+        numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
+        numberOfDigitsField.setDisable(ProgramData.numberOfDigitsIsDisabled);
+        longComputeTimeWarningLabel.setVisible(ProgramData.longComputeTimeWarningLabelVisibility);
     }
 }
