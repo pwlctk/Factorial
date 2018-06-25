@@ -2,14 +2,15 @@ package pl.pwlctk;
 
 import java.math.BigInteger;
 
-public class Factorial {
+class Factorial {
 
-    public static BigInteger calculateFactorial(BigInteger n) {
+    static String calculateFactorial(String number) {
+        BigInteger n = new BigInteger(number);
         BigInteger result = BigInteger.ONE;
         while (!n.equals(BigInteger.ZERO)) {
             result = result.multiply(n);
             n = n.subtract(BigInteger.ONE);
         }
-        return result;
+        return result.toString();
     }
 }

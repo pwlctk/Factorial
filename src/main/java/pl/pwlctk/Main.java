@@ -1,37 +1,41 @@
 package pl.pwlctk;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class Main extends Application {
+    private static Stage stage;
 
-    private static final String FXML_MAIN_WINDOW_FXML = "/fxml/mainWindow.fxml";
-    private static Stage stage; //Musiałem tak zrobic, aby dzialalo setAlwaysOnTop w MainController
-    private static Scene scene;
-
-    public static Scene getScene() {
-        return scene;
-    }
-
-    public static Stage getStage() {
+    static Stage getStage() {
         return stage;
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainWindow.fxml"));
+        loader.setResources(Bundle.getResourceBundle("pl"));
         stage = primaryStage;
-        Pane borderPane = FxmlUtils.fxmlLoader(FXML_MAIN_WINDOW_FXML);
-        scene = new Scene(borderPane);
-        primaryStage.setScene(scene);
-        primaryStage.setTitle(FxmlUtils.getResourcebundle().getString("title.application"));
-        primaryStage.show();
 
+        primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.setTitle(Bundle.getResourceBundle().getString("title.application"));
+        primaryStage.show();
+    }
+
+    void changeLanguage(String language) {
+        try {
+            stage.getScene().setRoot(FXMLLoader.load(getClass().getResource("/fxml/mainWindow.fxml"), ResourceBundle.getBundle("bundles/messages", new Locale(language))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {

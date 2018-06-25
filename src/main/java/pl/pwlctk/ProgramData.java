@@ -1,17 +1,6 @@
 package pl.pwlctk;
 
-
-import javafx.scene.control.RadioMenuItem;
-
-import java.util.ResourceBundle;
-
-import static pl.pwlctk.FxmlUtils.getResourcebundle;
-
 class ProgramData {
-    static ResourceBundle bundle = getResourcebundle();
-
-    //Menu Items
-    static RadioMenuItem styleRadioMenuItem;
     static boolean polishLanguage = true;
     static boolean alwaysOnTop;
     static boolean modernaStyle = true;
@@ -27,13 +16,22 @@ class ProgramData {
     static boolean longComputeTimeWarningLabelVisibility = false;
     static String longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
     static String statusMessage = "factorial.statusMessageReady";
+    static String factorialNumber = "";
 
     static String getStatusMessage() {
-        return bundle.getString(statusMessage);
+        return Bundle.bundle.getString(statusMessage);
+    }
+
+    static String getFileName() {
+        return Bundle.bundle.getString("factorial") + "(" + factorialNumber + ")";
+    }
+
+    static String getSaveExtension() {
+        return Bundle.bundle.getString("save.extension") + " (*.txt)";
     }
 
     static String getWarningMessage() {
-        return bundle.getString(longComputeTimeWarningLabel);
+        return Bundle.bundle.getString(longComputeTimeWarningLabel);
     }
 
 }
