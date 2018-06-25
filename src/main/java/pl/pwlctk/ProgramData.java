@@ -1,9 +1,18 @@
 package pl.pwlctk;
 
 
-public class ProgramData {
+import javafx.scene.control.RadioMenuItem;
+
+import java.util.ResourceBundle;
+
+import static pl.pwlctk.FxmlUtils.getResourcebundle;
+
+class ProgramData {
+    static ResourceBundle bundle = getResourcebundle();
 
     //Menu Items
+    static RadioMenuItem styleRadioMenuItem;
+    static boolean polishLanguage = true;
     static boolean alwaysOnTop;
     static boolean modernaStyle = true;
     static String result = "";
@@ -15,8 +24,16 @@ public class ProgramData {
     static boolean numberOfDigitsLabelIsDisabled = true;
     static String numberOfDigitsText = "";
     static boolean numberOfDigitsIsDisabled = true;
-    static int statusMessageId = 0;
     static boolean longComputeTimeWarningLabelVisibility = false;
-    static int longComputeTimeWarningLabelId = 0;
+    static String longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
+    static String statusMessage = "factorial.statusMessageReady";
+
+    static String getStatusMessage() {
+        return bundle.getString(statusMessage);
+    }
+
+    static String getWarningMessage() {
+        return bundle.getString(longComputeTimeWarningLabel);
+    }
 
 }

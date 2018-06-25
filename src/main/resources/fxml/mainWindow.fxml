@@ -197,7 +197,7 @@
                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                </HBox.margin>
            </Label>
-           <Label fx:id="statusMessage" text="%factorial.statusMessageReady">
+           <Label fx:id="statusMessageLabel" text="%factorial.statusMessageReady">
                <HBox.margin>
                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                </HBox.margin>

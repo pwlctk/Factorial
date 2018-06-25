@@ -26,9 +26,6 @@ import static pl.pwlctk.FxmlUtils.getResourcebundle;
 public class MainController implements Initializable {
 
     @FXML
-    private static ResourceBundle bundle = getResourcebundle();
-
-    @FXML
     private static String factorialNumber;
 
     @FXML
@@ -38,7 +35,7 @@ public class MainController implements Initializable {
     public Label numberOfDigitsLabel;
 
     @FXML
-    public Label statusMessage;
+    public Label statusMessageLabel;
 
     @FXML
     public TextArea resultTextArea;
@@ -71,6 +68,9 @@ public class MainController implements Initializable {
     public Label longComputeTimeWarningLabel;
 
     @FXML
+    public ToggleGroup languageGroup;
+
+    @FXML
     private TextField numberField;
 
     @FXML
@@ -79,22 +79,20 @@ public class MainController implements Initializable {
     @FXML
     public MenuItem saveToFileMenuItem;
 
-    private String message;
-
-    public static void aboutApplication() {
+    private static void aboutApplication() {
         Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
         informationAlert.initOwner(Main.getStage());
-        informationAlert.setTitle(bundle.getString("about.title"));
-        informationAlert.setHeaderText(bundle.getString("about.header"));
-        informationAlert.setContentText(bundle.getString("about.content"));
+        informationAlert.setTitle(ProgramData.bundle.getString("about.title"));
+        informationAlert.setHeaderText(ProgramData.bundle.getString("about.header"));
+        informationAlert.setContentText(ProgramData.bundle.getString("about.content"));
         informationAlert.showAndWait();
     }
 
-    public static Optional<ButtonType> confirmationDialog() {
+    private static Optional<ButtonType> confirmationDialog() {
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.initOwner(Main.getStage());
-        confirmationAlert.setTitle(bundle.getString("exit.title"));
-        confirmationAlert.setHeaderText(bundle.getString("exit.header"));
+        confirmationAlert.setTitle(ProgramData.bundle.getString("exit.title"));
+        confirmationAlert.setHeaderText(ProgramData.bundle.getString("exit.header"));
         return confirmationAlert.showAndWait();
 
     }
@@ -103,8 +101,8 @@ public class MainController implements Initializable {
     static void errorDialog(String error) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);
         errorAlert.initOwner(Main.getStage());
-        errorAlert.setTitle(bundle.getString("error.title"));
-        errorAlert.setHeaderText(bundle.getString("error.header"));
+        errorAlert.setTitle(ProgramData.bundle.getString("error.title"));
+        errorAlert.setHeaderText(ProgramData.bundle.getString("error.header"));
         TextArea textArea = new TextArea(error);
         errorAlert.getDialogPane().setContent(textArea);
         errorAlert.showAndWait();
@@ -112,8 +110,9 @@ public class MainController implements Initializable {
 
     @FXML
     public void computeFactorial() {
-        ProgramData.statusMessageId = 3;
-        statusMessage.setText(bundle.getString("factorial.statusMessageFinish"));
+
+        ProgramData.statusMessage = "factorial.statusMessageFinish";
+        statusMessageLabel.setText(ProgramData.getStatusMessage());
         BigInteger numberToCalculate = new BigInteger(numberField.getText());
         long startTime;
         long endTime;
@@ -145,35 +144,34 @@ public class MainController implements Initializable {
         ProgramData.numberFieldText = numberField.getText();
         boolean isDisabled = true;
         if (ProgramData.numberFieldText.matches("[0-9]*")) {
-            ProgramData.statusMessageId = 1;
-            statusMessage.setText(bundle.getString("factorial.statusMessageGo"));
+            ProgramData.statusMessage = "factorial.statusMessageGo";
+            statusMessageLabel.setText(ProgramData.getStatusMessage());
             isDisabled = (ProgramData.numberFieldText.isEmpty());
             if (keyEvent.getCode() == KeyCode.ENTER && !ProgramData.numberFieldText.isEmpty()) {
                 computeFactorial();
             }
 
         } else {
-            ProgramData.statusMessageId = 2;
-            statusMessage.setText(bundle.getString("factorial.statusMessageBadInput"));
-
+            ProgramData.statusMessage = "factorial.statusMessageBadInput";
+            statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
         if (ProgramData.numberFieldText.isEmpty()) {
-            ProgramData.statusMessageId = 3;
-            statusMessage.setText(bundle.getString("factorial.statusMessageReady"));
+            ProgramData.statusMessage = "factorial.statusMessageReady";
+            statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
 
 
         if (numberField.getText().length() > 5 && ProgramData.numberFieldText.matches("[0-9]*")) {
-            longComputeTimeWarningLabel.setVisible(true);
             ProgramData.longComputeTimeWarningLabelVisibility = true;
-            longComputeTimeWarningLabel.setText(bundle.getString("longComputeTimeWarningLabel"));
-            ProgramData.longComputeTimeWarningLabelId = 0;
-        } else if (!ProgramData.numberFieldText.matches("[0-9]*")) {
+            ProgramData.longComputeTimeWarningLabel = "longComputeTimeWarningLabel";
             longComputeTimeWarningLabel.setVisible(true);
-            ProgramData.longComputeTimeWarningLabelVisibility = true;
-            longComputeTimeWarningLabel.setText(bundle.getString("factorial.statusMessageBadInput"));
-            ProgramData.longComputeTimeWarningLabelId = 1;
+            longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
 
+        } else if (!ProgramData.numberFieldText.matches("[0-9]*")) {
+            ProgramData.longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
+            ProgramData.longComputeTimeWarningLabelVisibility = true;
+            longComputeTimeWarningLabel.setVisible(true);
+            longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
         } else {
             longComputeTimeWarningLabel.setVisible(false);
             ProgramData.longComputeTimeWarningLabelVisibility = false;
@@ -195,6 +193,7 @@ public class MainController implements Initializable {
     public void setModerna() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         ProgramData.modernaStyle = true;
+
 
     }
 
@@ -231,14 +230,18 @@ public class MainController implements Initializable {
 
     @FXML
     public void switchToPolish() {
-        bundle = getResourcebundle("pl");
+        ProgramData.polishLanguage = true;
+        ProgramData.bundle = getResourcebundle("pl");
         changeLocale("pl");
+
     }
 
     @FXML
     public void switchToEnglish() {
-        bundle = getResourcebundle("en");
+        ProgramData.polishLanguage = false;
+        ProgramData.bundle = getResourcebundle("en");
         changeLocale("en");
+
     }
 
     @FXML
@@ -246,12 +249,12 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
 
         //Set extension filter save.extension
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(FxmlUtils.getResourcebundle().getString("save.extension") + " (*.txt)", "*.txt");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(getResourcebundle().getString("save.extension") + " (*.txt)", "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
 
         //Set default directory and filename
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
-        String fileName = (FxmlUtils.getResourcebundle().getString("factorial") + "(" + factorialNumber + ")");
+        String fileName = (getResourcebundle().getString("factorial") + "(" + factorialNumber + ")");
         fileChooser.setInitialFileName(fileName);
 
         //set to file
@@ -264,52 +267,13 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        FxmlUtils.setResourcesBundle(resources.getLocale().getLanguage());
-        switch (resources.getLocale().getLanguage()) {
-            case "en":
-                englishRadioMenu.setSelected(true);
-                break;
-            case "pl":
-                polishRadioMenu.setSelected(true);
-                break;
-            default:
-                break;
-        }
-
-        switch (ProgramData.statusMessageId) {
-            case 0:
-                statusMessage.setText(bundle.getString("factorial.statusMessageReady"));
-                break;
-            case 1:
-                statusMessage.setText(bundle.getString("factorial.statusMessageGo"));
-                break;
-            case 2:
-                statusMessage.setText(bundle.getString("factorial.statusMessageBadInput"));
-                break;
-            case 3:
-                statusMessage.setText(bundle.getString("factorial.statusMessageFinish"));
-                break;
-        }
-
-        if (ProgramData.modernaStyle) {
-            styleGroup.selectToggle(modernaRadioMenuItem);
-        } else {
-            styleGroup.selectToggle(caspianRadioMenuItem);
-        }
-
-
-        if (ProgramData.result.equals("")) {
-            saveToFileMenuItem.setDisable(true);
-        } else {
-            saveToFileMenuItem.setDisable(false);
-        }
-
-        if (ProgramData.longComputeTimeWarningLabelId == 0) {
-            longComputeTimeWarningLabel.setText(bundle.getString("longComputeTimeWarningLabel"));
-        } else {
-            longComputeTimeWarningLabel.setText(bundle.getString("factorial.statusMessageBadInput"));
-        }
-
+        statusMessageLabel.setText(ProgramData.getStatusMessage());
+        modernaRadioMenuItem.setSelected(ProgramData.modernaStyle);
+        caspianRadioMenuItem.setSelected(!ProgramData.modernaStyle);
+        polishRadioMenu.setSelected(ProgramData.polishLanguage);
+        englishRadioMenu.setSelected(!ProgramData.polishLanguage);
+        saveToFileMenuItem.setDisable(ProgramData.result.isEmpty());
+        longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
         alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
         resultTextArea.setText(ProgramData.result);
         numberField.setText(ProgramData.numberFieldText);
