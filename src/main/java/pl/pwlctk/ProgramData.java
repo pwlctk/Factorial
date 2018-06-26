@@ -16,14 +16,17 @@ class ProgramData {
     static String longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
     static String statusMessage = "factorial.statusMessageReady";
     static String factorialNumber = "";
-    static String threadsStatusMessage = "threads.statusMessageSingle";
+    static String threadsStatusMessage = "";
     static boolean singleThreadCheckBox;
     static boolean multiThreadCheckBox;
     static boolean autoThreadCheckBox = true;
 
-
     static String getThreadsStatusMessage() {
-        return Bundle.bundle.getString(threadsStatusMessage);
+        if (threadsStatusMessage.isEmpty()) {
+            return "";
+        } else {
+            return Bundle.bundle.getString("threads.statusMessageSingle");
+        }
     }
 
     static String getThreadsLabel() {
