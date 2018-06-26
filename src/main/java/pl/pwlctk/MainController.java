@@ -16,7 +16,20 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+
     private Main main = new Main();
+
+    @FXML
+    public Label mainLabel;
+
+    @FXML
+    public CheckBox singleThreadCheckBox;
+
+    @FXML
+    public CheckBox multiThreadCheckBox;
+
+    @FXML
+    public CheckBox autoThreadCheckBox;
 
     @FXML
     public TextField numberOfDigitsField;
@@ -88,15 +101,30 @@ public class MainController implements Initializable {
 
     @FXML
     public void computeFactorial() {
-        ProgramData.statusMessage = "factorial.statusMessageFinish";
-        statusMessageLabel.setText(ProgramData.getStatusMessage());
+        //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
+        int tempNumber = Integer.parseInt(numberField.getText());
+        ProgramData.factorialNumber = String.valueOf(tempNumber);
         long startTime;
         long endTime;
-
         startTime = System.currentTimeMillis();
-        ProgramData.result = Factorial.calculateFactorial(numberField.getText());
+        if (ProgramData.autoThreadCheckBox) {
+            if (Integer.parseInt(ProgramData.factorialNumber) > 10000) {
+                ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
+                ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
+            } else {
+                ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
+                ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
+            }
+        } else if (ProgramData.singleThreadCheckBox) {
+            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
+            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
+        } else {
+            ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
+            ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
+        }
         endTime = System.currentTimeMillis();
-
+        ProgramData.statusMessage = "factorial.statusMessageFinish";
+        statusMessageLabel.setText(ProgramData.getStatusMessage() + ProgramData.getThreadsStatusMessage());
         ProgramData.calculateTimeLabelIsDisabled = false;
         ProgramData.calculateTimeFieldIsDisabled = false;
         ProgramData.calculateTimeFieldText = endTime - startTime + " ms";
@@ -109,7 +137,6 @@ public class MainController implements Initializable {
         calculateTimeField.setText(endTime - startTime + " ms");
         calculateTimeField.setDisable(false);
         calculateTimeLabel.setDisable(false);
-        ProgramData.factorialNumber = numberField.getText();
         numberOfDigitsField.setDisable(false);
         numberOfDigitsLabel.setDisable(false);
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
@@ -118,13 +145,13 @@ public class MainController implements Initializable {
 
     @FXML
     public void keyReleasedProperty(KeyEvent keyEvent) {
-        ProgramData.numberFieldText = numberField.getText();
+        ProgramData.factorialNumber = numberField.getText();
         boolean isDisabled = true;
-        if (ProgramData.numberFieldText.matches("[0-9]*")) {
+        if (ProgramData.factorialNumber.matches("[0-9]*")) {
             ProgramData.statusMessage = "factorial.statusMessageGo";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
-            isDisabled = (ProgramData.numberFieldText.isEmpty());
-            if (keyEvent.getCode() == KeyCode.ENTER && !ProgramData.numberFieldText.isEmpty()) {
+            isDisabled = (ProgramData.factorialNumber.isEmpty());
+            if (keyEvent.getCode() == KeyCode.ENTER && !ProgramData.factorialNumber.isEmpty()) {
                 computeFactorial();
             }
 
@@ -132,18 +159,18 @@ public class MainController implements Initializable {
             ProgramData.statusMessage = "factorial.statusMessageBadInput";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
-        if (ProgramData.numberFieldText.isEmpty()) {
+        if (ProgramData.factorialNumber.isEmpty()) {
             ProgramData.statusMessage = "factorial.statusMessageReady";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
 
-        if (numberField.getText().length() > 5 && ProgramData.numberFieldText.matches("[0-9]*")) {
+        if (numberField.getText().length() > 5 && ProgramData.factorialNumber.matches("[1-9]{1}[0-9]*")) {
             ProgramData.longComputeTimeWarningLabelVisibility = true;
             ProgramData.longComputeTimeWarningLabel = "longComputeTimeWarningLabel";
             longComputeTimeWarningLabel.setVisible(true);
             longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
 
-        } else if (!ProgramData.numberFieldText.matches("[0-9]*")) {
+        } else if (!ProgramData.factorialNumber.matches("[0-9]*")) {
             ProgramData.longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
             ProgramData.longComputeTimeWarningLabelVisibility = true;
             longComputeTimeWarningLabel.setVisible(true);
@@ -206,10 +233,8 @@ public class MainController implements Initializable {
     @FXML
     public void saveToFile() {
         FileChooser fileChooser = new FileChooser();
-
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(ProgramData.getSaveExtension(), "*.txt");
         fileChooser.getExtensionFilters().add(extFilter);
-
         fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
         fileChooser.setInitialFileName(ProgramData.getFileName());
 
@@ -222,7 +247,14 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        statusMessageLabel.setText(ProgramData.getStatusMessage());
+        int threads = Runtime.getRuntime().availableProcessors();
+        Platform.runLater(() -> numberField.requestFocus());
+
+        multiThreadCheckBox.setText(ProgramData.getThreadsLabel() + " (" + threads + ")");
+        singleThreadCheckBox.setSelected(ProgramData.singleThreadCheckBox);
+        multiThreadCheckBox.setSelected(ProgramData.multiThreadCheckBox);
+        autoThreadCheckBox.setSelected(ProgramData.autoThreadCheckBox);
+        statusMessageLabel.setText(ProgramData.getStatusMessage() + ProgramData.getThreadsStatusMessage());
         modernaRadioMenuItem.setSelected(ProgramData.modernaStyle);
         caspianRadioMenuItem.setSelected(!ProgramData.modernaStyle);
         polishRadioMenu.setSelected(ProgramData.polishLanguage);
@@ -231,7 +263,7 @@ public class MainController implements Initializable {
         longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
         alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
         resultTextArea.setText(ProgramData.result);
-        numberField.setText(ProgramData.numberFieldText);
+        numberField.setText(ProgramData.factorialNumber);
         computeButton.setDisable(ProgramData.computeButtonIsDisabled);
         calculateTimeField.setDisable(ProgramData.calculateTimeFieldIsDisabled);
         calculateTimeField.setText(ProgramData.calculateTimeFieldText);
@@ -240,5 +272,35 @@ public class MainController implements Initializable {
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
         numberOfDigitsField.setDisable(ProgramData.numberOfDigitsIsDisabled);
         longComputeTimeWarningLabel.setVisible(ProgramData.longComputeTimeWarningLabelVisibility);
+    }
+
+    @FXML
+    public void checkBoxAuto() {
+        autoThreadCheckBox.setSelected(true);
+        singleThreadCheckBox.setSelected(false);
+        multiThreadCheckBox.setSelected(false);
+        ProgramData.autoThreadCheckBox = true;
+        ProgramData.singleThreadCheckBox = false;
+        ProgramData.multiThreadCheckBox = false;
+    }
+
+    @FXML
+    public void checkBoxSingle() {
+        autoThreadCheckBox.setSelected(false);
+        singleThreadCheckBox.setSelected(true);
+        multiThreadCheckBox.setSelected(false);
+        ProgramData.autoThreadCheckBox = false;
+        ProgramData.singleThreadCheckBox = true;
+        ProgramData.multiThreadCheckBox = false;
+    }
+
+    @FXML
+    public void checkBoxMulti() {
+        autoThreadCheckBox.setSelected(false);
+        singleThreadCheckBox.setSelected(false);
+        multiThreadCheckBox.setSelected(true);
+        ProgramData.autoThreadCheckBox = false;
+        ProgramData.singleThreadCheckBox = false;
+        ProgramData.multiThreadCheckBox = true;
     }
 }

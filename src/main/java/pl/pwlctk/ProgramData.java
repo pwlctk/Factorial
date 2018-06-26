@@ -5,7 +5,6 @@ class ProgramData {
     static boolean alwaysOnTop;
     static boolean modernaStyle = true;
     static String result = "";
-    static String numberFieldText = "";
     static boolean computeButtonIsDisabled = true;
     static boolean calculateTimeFieldIsDisabled = true;
     static String calculateTimeFieldText;
@@ -17,6 +16,19 @@ class ProgramData {
     static String longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
     static String statusMessage = "factorial.statusMessageReady";
     static String factorialNumber = "";
+    static String threadsStatusMessage = "threads.statusMessageSingle";
+    static boolean singleThreadCheckBox;
+    static boolean multiThreadCheckBox;
+    static boolean autoThreadCheckBox = true;
+
+
+    static String getThreadsStatusMessage() {
+        return Bundle.bundle.getString(threadsStatusMessage);
+    }
+
+    static String getThreadsLabel() {
+        return Bundle.bundle.getString("threads.multi");
+    }
 
     static String getStatusMessage() {
         return Bundle.bundle.getString(statusMessage);

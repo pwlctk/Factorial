@@ -11,17 +11,18 @@ import java.util.ResourceBundle;
 
 public class Main extends Application {
     private static Stage stage;
-
+    private final String FXML = "/fxml/mainWindow.fxml";
     static Stage getStage() {
         return stage;
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
         primaryStage.setMinWidth(800);
         primaryStage.setMinHeight(600);
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mainWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(FXML));
         loader.setResources(Bundle.getResourceBundle("pl"));
         stage = primaryStage;
 
@@ -32,7 +33,7 @@ public class Main extends Application {
 
     void changeLanguage(String language) {
         try {
-            stage.getScene().setRoot(FXMLLoader.load(getClass().getResource("/fxml/mainWindow.fxml"), ResourceBundle.getBundle("bundles/messages", new Locale(language))));
+            stage.getScene().setRoot(FXMLLoader.load(getClass().getResource(FXML), ResourceBundle.getBundle("bundles/messages", new Locale(language))));
         } catch (IOException e) {
             e.printStackTrace();
         }
