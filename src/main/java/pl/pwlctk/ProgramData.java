@@ -25,7 +25,7 @@ class ProgramData {
         if (threadsStatusMessage.isEmpty()) {
             return "";
         } else {
-            return Bundle.bundle.getString("threads.statusMessageSingle");
+            return Bundle.bundle.getString(threadsStatusMessage);
         }
     }
 
