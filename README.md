@@ -1,7 +1,9 @@
 # Silnia z miliona!
 
-It's my first not Console application :)
-Just very simple widow application to calculate factorial from very large numbers
+Very simple widow application to calculate factorial from very large numbers
+
+Features:
+Multithreading in calculation, dynamic language change, write data to disk, change widow style
 
 ### Prerequisites
 
