@@ -1,7 +1,9 @@
 # Silnia z miliona!
 
-It's my first not Console application :)
-Just very simple widow application to calculate factorial from very large numbers
+Simple JavaFx application to calculate factorial from very large numbers
+
+Features:
+Multithreading in calculation, dynamic language change, write data to disk, change style
 
 ### Prerequisites
 
