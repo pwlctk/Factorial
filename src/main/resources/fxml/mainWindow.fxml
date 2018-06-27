@@ -51,16 +51,6 @@
             <center>
                 <VBox>
                     <BorderPane>
-                        <left>
-                            <Label alignment="BOTTOM_LEFT" text="%factorial.result" BorderPane.alignment="CENTER">
-                                <font>
-                                    <Font name="Calibri" size="14.0"/>
-                                </font>
-                                <BorderPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0"/>
-                                </BorderPane.margin>
-                            </Label>
-                        </left>
                         <right>
                             <TextField fx:id="calculateTimeField" disable="true" editable="false" prefWidth="100.0"
                                        BorderPane.alignment="CENTER">
@@ -98,21 +88,54 @@
                                     <padding>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                     </padding>
+                                    <font>
+                                        <Font name="Calibri" size="12.0"/>
+                                    </font>
                                 </CheckBox>
                                 <CheckBox fx:id="singleThreadCheckBox" mnemonicParsing="false"
                                           onAction="#checkBoxSingle" text="%threads.single">
                                     <padding>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                     </padding>
+                                    <font>
+                                        <Font name="Calibri" size="12.0"/>
+                                    </font>
                                 </CheckBox>
                                 <CheckBox fx:id="multiThreadCheckBox" mnemonicParsing="false" onAction="#checkBoxMulti"
                                           text="%threads.multi">
                                     <padding>
                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                     </padding>
+                                    <font>
+                                        <Font name="Calibri" size="12.0"/>
+                                    </font>
                                 </CheckBox>
                             </HBox>
                         </top>
+                        <left>
+                            <HBox alignment="CENTER_LEFT" BorderPane.alignment="BOTTOM_CENTER">
+                                <children>
+                                    <Label alignment="BOTTOM_LEFT" text="%factorial.result">
+                                        <font>
+                                            <Font name="Calibri" size="14.0"/>
+                                        </font>
+                                        <HBox.margin>
+                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                        </HBox.margin>
+                                    </Label>
+                                    <Button fx:id="showResultButton" alignment="CENTER" defaultButton="true"
+                                            mnemonicParsing="false" onAction="#showResult"
+                                            text="%factorial.resultButton" visible="false">
+                                        <font>
+                                            <Font name="Calibri" size="16.0"/>
+                                        </font>
+                                        <HBox.margin>
+                                            <Insets/>
+                                        </HBox.margin>
+                                    </Button>
+                                </children>
+                            </HBox>
+                        </left>
                     </BorderPane>
                     <TextArea fx:id="resultTextArea" editable="false" focusTraversable="false" wrapText="true"
                               VBox.vgrow="ALWAYS">
@@ -184,7 +207,7 @@
                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                         </HBox.margin>
                                     </TextField>
-                                    <Label fx:id="longComputeTimeWarningLabel" contentDisplay="CENTER"
+                                    <Label fx:id="computeLabel" contentDisplay="CENTER"
                                            text="%longComputeTimeWarningLabel" textFill="RED">
                                         <HBox.margin>
                                             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>

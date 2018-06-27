@@ -17,7 +17,11 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    private final int BIG_NUMBER = 100000;
     private Main main = new Main();
+
+    @FXML
+    public Button showResultButton;
 
     @FXML
     public Label mainLabel;
@@ -68,7 +72,7 @@ public class MainController implements Initializable {
     public ToggleGroup styleGroup;
 
     @FXML
-    public Label longComputeTimeWarningLabel;
+    public Label computeLabel;
 
     @FXML
     public ToggleGroup languageGroup;
@@ -102,13 +106,12 @@ public class MainController implements Initializable {
     @FXML
     public void computeFactorial() {
         //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
-        int tempNumber = Integer.parseInt(numberField.getText());
-        ProgramData.factorialNumber = String.valueOf(tempNumber);
+        ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
         long startTime;
         long endTime;
         startTime = System.currentTimeMillis();
         if (ProgramData.autoThreadCheckBox) {
-            if (Integer.parseInt(ProgramData.factorialNumber) > 10000) {
+            if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10) {
                 ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
                 ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
             } else {
@@ -123,7 +126,12 @@ public class MainController implements Initializable {
             ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
         }
         endTime = System.currentTimeMillis();
+
         ProgramData.statusMessage = "factorial.statusMessageFinish";
+        ProgramData.computeLabelVisibility = true;
+        computeLabel.setVisible(ProgramData.computeLabelVisibility);
+        computeLabel.setText(ProgramData.getMessage());
+
         statusMessageLabel.setText(ProgramData.getStatusMessage() + ProgramData.getThreadsStatusMessage());
         ProgramData.calculateTimeLabelIsDisabled = false;
         ProgramData.calculateTimeFieldIsDisabled = false;
@@ -132,7 +140,19 @@ public class MainController implements Initializable {
         ProgramData.numberOfDigitsIsDisabled = false;
         ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
 
-        resultTextArea.setText(ProgramData.result);
+        if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER) {
+            ProgramData.showResultButton = true;
+            showResultButton.setVisible(ProgramData.showResultButton);
+            resultTextArea.setText("");
+            ProgramData.disableResultTextArea = true;
+
+        } else {
+            ProgramData.showResultButton = false;
+            showResultButton.setVisible(ProgramData.showResultButton);
+            resultTextArea.setText(ProgramData.result);
+            ProgramData.disableResultTextArea = false;
+        }
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
 
         calculateTimeField.setText(endTime - startTime + " ms");
         calculateTimeField.setDisable(false);
@@ -145,13 +165,12 @@ public class MainController implements Initializable {
 
     @FXML
     public void keyReleasedProperty(KeyEvent keyEvent) {
-        ProgramData.factorialNumber = numberField.getText();
         boolean isDisabled = true;
-        if (ProgramData.factorialNumber.matches("[0-9]*")) {
+        if (numberField.getText().matches("[0-9]*")) {
             ProgramData.statusMessage = "factorial.statusMessageGo";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
-            isDisabled = (ProgramData.factorialNumber.isEmpty());
-            if (keyEvent.getCode() == KeyCode.ENTER && !ProgramData.factorialNumber.isEmpty()) {
+            isDisabled = (numberField.getText().isEmpty());
+            if (keyEvent.getCode() == KeyCode.ENTER && !numberField.getText().isEmpty()) {
                 computeFactorial();
             }
 
@@ -159,25 +178,23 @@ public class MainController implements Initializable {
             ProgramData.statusMessage = "factorial.statusMessageBadInput";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
-        if (ProgramData.factorialNumber.isEmpty()) {
+        if (numberField.getText().isEmpty()) {
             ProgramData.statusMessage = "factorial.statusMessageReady";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
         }
 
-        if (numberField.getText().length() > 5 && ProgramData.factorialNumber.matches("[1-9]{1}[0-9]*")) {
-            ProgramData.longComputeTimeWarningLabelVisibility = true;
-            ProgramData.longComputeTimeWarningLabel = "longComputeTimeWarningLabel";
-            longComputeTimeWarningLabel.setVisible(true);
-            longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
+        if (numberField.getText().length() > 5 && numberField.getText().matches("[1-9]{1}[0-9]*")) {
+            ProgramData.computeLabelVisibility = true;
+            computeLabel.setVisible(true);
+            computeLabel.setText(ProgramData.getWarningMessage());
 
-        } else if (!ProgramData.factorialNumber.matches("[0-9]*")) {
-            ProgramData.longComputeTimeWarningLabel = "factorial.statusMessageBadInput";
-            ProgramData.longComputeTimeWarningLabelVisibility = true;
-            longComputeTimeWarningLabel.setVisible(true);
-            longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
+        } else if (!numberField.getText().matches("[0-9]*")) {
+            ProgramData.computeLabelVisibility = true;
+            computeLabel.setVisible(true);
+            computeLabel.setText(ProgramData.getMessage());
         } else {
-            longComputeTimeWarningLabel.setVisible(false);
-            ProgramData.longComputeTimeWarningLabelVisibility = false;
+            computeLabel.setVisible(false);
+            ProgramData.computeLabelVisibility = false;
         }
         computeButton.setDisable(isDisabled);
         ProgramData.computeButtonIsDisabled = isDisabled;
@@ -260,9 +277,9 @@ public class MainController implements Initializable {
         polishRadioMenu.setSelected(ProgramData.polishLanguage);
         englishRadioMenu.setSelected(!ProgramData.polishLanguage);
         saveToFileMenuItem.setDisable(ProgramData.result.isEmpty());
-        longComputeTimeWarningLabel.setText(ProgramData.getWarningMessage());
+        computeLabel.setText(ProgramData.getMessage());
         alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
-        resultTextArea.setText(ProgramData.result);
+        resultTextArea.setText(ProgramData.getResult());
         numberField.setText(ProgramData.factorialNumber);
         computeButton.setDisable(ProgramData.computeButtonIsDisabled);
         calculateTimeField.setDisable(ProgramData.calculateTimeFieldIsDisabled);
@@ -271,7 +288,9 @@ public class MainController implements Initializable {
         numberOfDigitsLabel.setDisable(ProgramData.numberOfDigitsLabelIsDisabled);
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
         numberOfDigitsField.setDisable(ProgramData.numberOfDigitsIsDisabled);
-        longComputeTimeWarningLabel.setVisible(ProgramData.longComputeTimeWarningLabelVisibility);
+        computeLabel.setVisible(ProgramData.computeLabelVisibility);
+        showResultButton.setVisible(ProgramData.showResultButton);
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
     }
 
     @FXML
@@ -302,5 +321,15 @@ public class MainController implements Initializable {
         ProgramData.autoThreadCheckBox = false;
         ProgramData.singleThreadCheckBox = false;
         ProgramData.multiThreadCheckBox = true;
+    }
+
+    @FXML
+    public void showResult() {
+        ProgramData.disableResultTextArea = false;
+        resultTextArea.setText(ProgramData.getResult());
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
+        ProgramData.showResultButton = false;
+        showResultButton.setVisible(ProgramData.showResultButton);
+
     }
 }

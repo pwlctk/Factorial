@@ -6,9 +6,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 class SaveToDisk {
-    static void writeToDisk(String invocation, String path) {
+    static void writeToDisk(String content, String path) {
         try {
-            Files.write(Paths.get(path), invocation.getBytes(), StandardOpenOption.CREATE);
+            Files.write(Paths.get(path), content.getBytes(), StandardOpenOption.CREATE);
         } catch (IOException e) {
             e.printStackTrace();
         }

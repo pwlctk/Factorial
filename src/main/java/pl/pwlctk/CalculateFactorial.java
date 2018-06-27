@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 class CalculateFactorial {
-
     static String calculateFactorialSingleThreading(String number) {
         BigInteger n = new BigInteger(number);
         BigInteger result = BigInteger.ONE;
