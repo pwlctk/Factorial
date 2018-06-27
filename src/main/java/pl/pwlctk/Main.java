@@ -11,7 +11,7 @@ import java.util.ResourceBundle;
 
 public class Main extends Application {
     private static Stage stage;
-    private final String FXML = "/fxml/mainWindow.fxml";
+    private final String FXML = "/mainWindow.fxml";
     static Stage getStage() {
         return stage;
     }

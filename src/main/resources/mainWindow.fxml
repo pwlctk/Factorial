@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
@@ -114,26 +115,24 @@
                         </top>
                         <left>
                             <HBox alignment="CENTER_LEFT" BorderPane.alignment="BOTTOM_CENTER">
-                                <children>
-                                    <Label alignment="BOTTOM_LEFT" text="%factorial.result">
-                                        <font>
-                                            <Font name="Calibri" size="14.0"/>
-                                        </font>
-                                        <HBox.margin>
-                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                                        </HBox.margin>
-                                    </Label>
-                                    <Button fx:id="showResultButton" alignment="CENTER" defaultButton="true"
-                                            mnemonicParsing="false" onAction="#showResult"
-                                            text="%factorial.resultButton" visible="false">
-                                        <font>
-                                            <Font name="Calibri" size="16.0"/>
-                                        </font>
-                                        <HBox.margin>
-                                            <Insets/>
-                                        </HBox.margin>
-                                    </Button>
-                                </children>
+                                <Label alignment="BOTTOM_LEFT" text="%factorial.result">
+                                    <font>
+                                        <Font name="Calibri" size="14.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                    </HBox.margin>
+                                </Label>
+                                <Button fx:id="showResultButton" alignment="CENTER" defaultButton="true"
+                                        mnemonicParsing="false" onAction="#showResult" text="%factorial.resultButton"
+                                        visible="false">
+                                    <font>
+                                        <Font name="Calibri" size="16.0"/>
+                                    </font>
+                                    <HBox.margin>
+                                        <Insets/>
+                                    </HBox.margin>
+                                </Button>
                             </HBox>
                         </left>
                     </BorderPane>
@@ -156,7 +155,10 @@
                             <BorderPane.margin>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </BorderPane.margin>
-                            <Image url="@../icons/factorial.png"/>
+                            <Image url="@icons/factorial.png"/>
+                            <effect>
+                                <DropShadow height="5.0" radius="2.0" spread="0.59" width="5.0"/>
+                            </effect>
                         </ImageView>
                     </left>
                     <bottom>
@@ -178,7 +180,7 @@
                                     <graphic>
                                         <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true"
                                                    preserveRatio="true">
-                                            <Image url="@../icons/calculateFactorial.png"/>
+                                            <Image url="@icons/calculateFactorial.png"/>
                                         </ImageView>
                                     </graphic>
                                     <font>
@@ -233,14 +235,17 @@
                             <BorderPane.margin>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                             </BorderPane.margin>
-                            <Image url="@../icons/einstein.png"/>
+                            <Image url="@icons/einstein.png"/>
                         </ImageView>
                     </right>
                     <center>
-                        <Label fx:id="mainLabel" text="%factorial.label" BorderPane.alignment="CENTER">
+                        <Label fx:id="mainLabel" text="%factorial.label" textFill="WHITE" BorderPane.alignment="CENTER">
                             <font>
                                 <Font name="Calibri Bold" size="60.0"/>
                             </font>
+                            <effect>
+                                <DropShadow height="38.79" radius="16.67" spread="0.91" width="29.89"/>
+                            </effect>
                         </Label>
                     </center>
                 </BorderPane>
