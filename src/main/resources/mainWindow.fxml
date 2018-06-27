@@ -14,9 +14,21 @@
             <Menu mnemonicParsing="false" text="%file">
                 <MenuItem disable="true" mnemonicParsing="false" text="New" visible="false"/>
                 <MenuItem fx:id="saveToFileMenuItem" disable="true" mnemonicParsing="false" onAction="#saveToFile"
-                          text="%file.save"/>
+                          text="%file.save">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@icons/save.png"/>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%close"/>
+                <MenuItem mnemonicParsing="false" onAction="#closeApplication" text="%close">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@icons/exit.png"/>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
             </Menu>
             <Menu mnemonicParsing="false" text="%edit">
                 <RadioMenuItem fx:id="modernaRadioMenuItem" mnemonicParsing="false" onAction="#setModerna"
@@ -43,7 +55,13 @@
                                text="%alwaysOnTop"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Info">
-                <MenuItem mnemonicParsing="false" onAction="#about" text="%about"/>
+                <MenuItem mnemonicParsing="false" onAction="#about" text="%about">
+                    <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@icons/info.png"/>
+                        </ImageView>
+                    </graphic>
+                </MenuItem>
             </Menu>
         </MenuBar>
     </top>
@@ -157,7 +175,7 @@
                             </BorderPane.margin>
                             <Image url="@icons/factorial.png"/>
                             <effect>
-                                <DropShadow height="5.0" radius="2.0" spread="0.59" width="5.0"/>
+                                <DropShadow height="5.0" radius="2.0" width="5.0"/>
                             </effect>
                         </ImageView>
                     </left>
