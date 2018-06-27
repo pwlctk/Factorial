@@ -12,7 +12,6 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu mnemonicParsing="false" text="%file">
-                <MenuItem disable="true" mnemonicParsing="false" text="New" visible="false"/>
                 <MenuItem fx:id="saveToFileMenuItem" disable="true" mnemonicParsing="false" onAction="#saveToFile"
                           text="%file.save">
                     <graphic>
@@ -193,8 +192,8 @@
                             </left>
                             <right>
                                 <Button fx:id="computeButton" alignment="CENTER" disable="true" graphicTextGap="15.0"
-                                        mnemonicParsing="false" onAction="#computeFactorial" prefHeight="63.0"
-                                        prefWidth="171.0" text="%key.compute" BorderPane.alignment="CENTER">
+                                        mnemonicParsing="false" onAction="#computeFactorial" prefHeight="60.0"
+                                        prefWidth="180.0" text="%key.compute" BorderPane.alignment="CENTER">
                                     <graphic>
                                         <ImageView fitHeight="64.0" fitWidth="64.0" pickOnBounds="true"
                                                    preserveRatio="true">
