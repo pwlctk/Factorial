@@ -18,73 +18,51 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     private final int BIG_NUMBER = 100000;
-    private Main main = new Main();
-
     @FXML
     public Button showResultButton;
-
     @FXML
     public Label mainLabel;
-
     @FXML
     public CheckBox singleThreadCheckBox;
-
     @FXML
     public CheckBox multiThreadCheckBox;
-
     @FXML
     public CheckBox autoThreadCheckBox;
-
     @FXML
     public TextField numberOfDigitsField;
-
     @FXML
     public Label numberOfDigitsLabel;
-
     @FXML
     public Label statusMessageLabel;
-
     @FXML
     public TextArea resultTextArea;
-
     @FXML
     public TextField calculateTimeField;
-
     @FXML
     public Label calculateTimeLabel;
-
     @FXML
     public RadioMenuItem polishRadioMenu;
-
     @FXML
     public RadioMenuItem englishRadioMenu;
-
     @FXML
     public CheckMenuItem alwaysOnTopMenuItem;
-
     @FXML
     public RadioMenuItem modernaRadioMenuItem;
-
     @FXML
     public RadioMenuItem caspianRadioMenuItem;
-
     @FXML
     public ToggleGroup styleGroup;
-
     @FXML
     public Label computeLabel;
-
     @FXML
     public ToggleGroup languageGroup;
-
-    @FXML
-    private TextField numberField;
-
-    @FXML
-    private Button computeButton;
-
     @FXML
     public MenuItem saveToFileMenuItem;
+    private Main main = new Main();
+    @FXML
+    private TextField numberField;
+    @FXML
+    private Button computeButton;
 
     private static void aboutApplication() {
         Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);

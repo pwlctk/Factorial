@@ -12,8 +12,13 @@ import java.util.ResourceBundle;
 public class Main extends Application {
     private static Stage stage;
     private final String FXML = "/mainWindow.fxml";
+
     static Stage getStage() {
         return stage;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
     @Override
@@ -36,9 +41,5 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
