@@ -18,8 +18,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
     private final int BIG_NUMBER = 100000;
+    private Main main = new Main();
     @FXML
     public Button showResultButton;
     @FXML
@@ -60,7 +60,6 @@ public class MainController implements Initializable {
     public ToggleGroup languageGroup;
     @FXML
     public MenuItem saveToFileMenuItem;
-    private Main main = new Main();
     @FXML
     private TextField numberField;
     @FXML
@@ -73,41 +72,6 @@ public class MainController implements Initializable {
             Effects.setDefault();
         }
     };
-
-//    private void loadingDialog(Thread th) {
-//        Effects.setBlur();
-//        Alert loadingAlert = new Alert(Alert.AlertType.WARNING);
-//        loadingAlert.initOwner(Main.getStage());
-//        loadingAlert.setTitle("Proszę czekać");
-//        loadingAlert.setHeaderText("Trwa obliczanie silni...");
-//        loadingAlert.setContentText("To może potrwać dłużej niż myślisz.");
-//        Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
-//        okButton.setText("Zamknij aplikację");
-//        loadingAlert.setOnCloseRequest(windowEvent -> {
-//            if (th.isAlive()) {
-//                Platform.exit();
-//                System.exit(0);
-//            }
-//        });
-//        Thread loadingThread = new Thread(() -> {
-//            try {
-//                th.join();
-//                if (loadingAlert.isShowing()) {
-//                    Platform.runLater(loadingAlert::close);
-//                }
-//            } catch (Exception exp) {
-//                exp.printStackTrace();
-//            }
-//        });
-//        loadingThread.setDaemon(true);
-//        loadingThread.start();
-//        Optional<ButtonType> result = loadingAlert.showAndWait();
-//        if (result.isPresent()) {
-//            Platform.exit();
-//            System.exit(0);
-//        }
-//        Effects.setDefault();
-//    }
 
     private static void aboutApplication() {
         Effects.setBlur();
@@ -142,20 +106,17 @@ public class MainController implements Initializable {
 
     @FXML
     public void computeFactorial() {
-        Effects.setBlur();
         //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
         ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
         long startTime;
         long endTime;
         startTime = System.currentTimeMillis();
+
+
         if (ProgramData.autoThreadCheckBox) {
             if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10) {
                 ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
                 ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
-//                Thread th = new Thread(() -> ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber));
-//                th.setDaemon(true);
-//                th.start();
-//                loadingDialog(th);
             } else {
                 ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
                 ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
@@ -167,6 +128,7 @@ public class MainController implements Initializable {
             ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
             ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
         }
+
         endTime = System.currentTimeMillis();
 
         ProgramData.statusMessage = "factorial.statusMessageFinish";
@@ -203,7 +165,6 @@ public class MainController implements Initializable {
         numberOfDigitsLabel.setDisable(false);
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
         saveToFileMenuItem.setDisable(false);
-        Effects.setDefault();
     }
 
     @FXML
