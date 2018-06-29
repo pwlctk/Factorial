@@ -110,25 +110,15 @@ public class MainController implements Initializable {
         ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
         long startTime;
         long endTime;
+
         startTime = System.currentTimeMillis();
-
-
-        if (ProgramData.autoThreadCheckBox) {
-            if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10) {
-                ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
-                ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
-            } else {
-                ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-                ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
-            }
-        } else if (ProgramData.singleThreadCheckBox) {
-            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
-        } else {
+        if (isMultiThread()) {
             ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
             ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
+        } else {
+            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
+            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
         }
-
         endTime = System.currentTimeMillis();
 
         ProgramData.statusMessage = "factorial.statusMessageFinish";
@@ -165,6 +155,16 @@ public class MainController implements Initializable {
         numberOfDigitsLabel.setDisable(false);
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
         saveToFileMenuItem.setDisable(false);
+    }
+
+    private boolean isMultiThread() {
+        boolean multiThread;
+        if (ProgramData.autoThreadCheckBox) {
+            multiThread = Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10;
+        } else {
+            multiThread = !ProgramData.singleThreadCheckBox;
+        }
+        return multiThread;
     }
 
     @FXML
