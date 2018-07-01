@@ -30,7 +30,6 @@ public class Main extends Application {
         loader.setResources(Bundle.getResourceBundle("pl"));
         stage = primaryStage;
 
-
         primaryStage.setScene(new Scene(loader.load()));
         primaryStage.setTitle(Bundle.getResourceBundle().getString("title.application"));
         primaryStage.show();
