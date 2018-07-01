@@ -20,46 +20,41 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     private final int BIG_NUMBER = 100000;
     private Main main = new Main();
+
     @FXML
-    public Button showResultButton;
+    private Button showResultButton;
     @FXML
-    public Label mainLabel;
+    private CheckBox singleThreadCheckBox;
     @FXML
-    public CheckBox singleThreadCheckBox;
+    private CheckBox multiThreadCheckBox;
     @FXML
-    public CheckBox multiThreadCheckBox;
+    private CheckBox autoThreadCheckBox;
     @FXML
-    public CheckBox autoThreadCheckBox;
+    private TextField numberOfDigitsField;
     @FXML
-    public TextField numberOfDigitsField;
+    private Label numberOfDigitsLabel;
     @FXML
-    public Label numberOfDigitsLabel;
+    private Label statusMessageLabel;
     @FXML
-    public Label statusMessageLabel;
+    private TextArea resultTextArea;
     @FXML
-    public TextArea resultTextArea;
+    private TextField calculateTimeField;
     @FXML
-    public TextField calculateTimeField;
+    private Label calculateTimeLabel;
     @FXML
-    public Label calculateTimeLabel;
+    private RadioMenuItem polishRadioMenu;
     @FXML
-    public RadioMenuItem polishRadioMenu;
+    private RadioMenuItem englishRadioMenu;
     @FXML
-    public RadioMenuItem englishRadioMenu;
+    private CheckMenuItem alwaysOnTopMenuItem;
     @FXML
-    public CheckMenuItem alwaysOnTopMenuItem;
+    private RadioMenuItem modernaRadioMenuItem;
     @FXML
-    public RadioMenuItem modernaRadioMenuItem;
+    private RadioMenuItem caspianRadioMenuItem;
     @FXML
-    public RadioMenuItem caspianRadioMenuItem;
+    private Label computeLabel;
     @FXML
-    public ToggleGroup styleGroup;
-    @FXML
-    public Label computeLabel;
-    @FXML
-    public ToggleGroup languageGroup;
-    @FXML
-    public MenuItem saveToFileMenuItem;
+    private MenuItem saveToFileMenuItem;
     @FXML
     private TextField numberField;
     @FXML
@@ -94,7 +89,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void closeApplication() {
+    private void closeApplication() {
         Optional<ButtonType> exitButton = confirmationDialog();
         if (exitButton.get() == ButtonType.OK) {
             Platform.exit();
@@ -105,7 +100,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void computeFactorial() {
+    private void computeFactorial() {
         //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
         ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
         long startTime;
@@ -168,45 +163,45 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void setModerna() {
+    private void setModerna() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         ProgramData.modernaStyle = true;
     }
 
     @FXML
-    public void setCaspian() {
+    private void setCaspian() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
         ProgramData.modernaStyle = false;
     }
 
     @FXML
-    public void about() {
+    private void about() {
         aboutApplication();
     }
 
     @FXML
-    public void setAlwaysOnTop(ActionEvent actionEvent) {
+    private void setAlwaysOnTop(ActionEvent actionEvent) {
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         Main.getStage().setAlwaysOnTop(isSelected);
         ProgramData.alwaysOnTop = isSelected;
     }
 
     @FXML
-    public void switchToPolish() {
+    private void switchToPolish() {
         ProgramData.polishLanguage = true;
         Bundle.bundle = Bundle.getResourceBundle("pl");
         main.changeLanguage("pl");
     }
 
     @FXML
-    public void switchToEnglish() {
+    private void switchToEnglish() {
         ProgramData.polishLanguage = false;
         Bundle.bundle = Bundle.getResourceBundle("en");
         main.changeLanguage("en");
     }
 
     @FXML
-    public void keyReleasedProperty(KeyEvent keyEvent) {
+    private void keyReleasedProperty(KeyEvent keyEvent) {
         boolean isDisabled = true;
         if (numberField.getText().matches("[0-9]*")) {
             ProgramData.statusMessage = "factorial.statusMessageGo";
@@ -243,7 +238,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void saveToFile() {
+    private void saveToFile() {
         Effects.setBlur();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(ProgramData.getSaveExtension(), "*.txt");
@@ -292,7 +287,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxAuto() {
+    private void checkBoxAuto() {
         autoThreadCheckBox.setSelected(true);
         singleThreadCheckBox.setSelected(false);
         multiThreadCheckBox.setSelected(false);
@@ -302,7 +297,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxSingle() {
+    private void checkBoxSingle() {
         autoThreadCheckBox.setSelected(false);
         singleThreadCheckBox.setSelected(true);
         multiThreadCheckBox.setSelected(false);
@@ -312,7 +307,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxMulti() {
+    private void checkBoxMulti() {
         autoThreadCheckBox.setSelected(false);
         singleThreadCheckBox.setSelected(false);
         multiThreadCheckBox.setSelected(true);
@@ -322,7 +317,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void showResult() {
+    private void showResult() {
         ProgramData.disableResultTextArea = false;
         resultTextArea.setText(ProgramData.getResult());
         resultTextArea.setDisable(ProgramData.disableResultTextArea);

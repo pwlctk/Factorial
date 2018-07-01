@@ -2,11 +2,9 @@ package pl.pwlctk;
 
 import javafx.scene.effect.BoxBlur;
 
-public class Effects {
+class Effects {
 
-    //Effects
-
-    public static void setBlur() {
+    static void setBlur() {
         BoxBlur boxBlur = new BoxBlur();
         boxBlur.setWidth(10);
         boxBlur.setHeight(3);
@@ -14,7 +12,7 @@ public class Effects {
         Main.getStage().getScene().getRoot().setEffect(boxBlur);
     }
 
-    public static void setDefault() {
+    static void setDefault() {
         Main.getStage().getScene().getRoot().setEffect(null);
     }
 }
