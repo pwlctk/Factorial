@@ -18,49 +18,43 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
     private final int BIG_NUMBER = 100000;
-    @FXML
-    public Button showResultButton;
-    @FXML
-    public Label mainLabel;
-    @FXML
-    public CheckBox singleThreadCheckBox;
-    @FXML
-    public CheckBox multiThreadCheckBox;
-    @FXML
-    public CheckBox autoThreadCheckBox;
-    @FXML
-    public TextField numberOfDigitsField;
-    @FXML
-    public Label numberOfDigitsLabel;
-    @FXML
-    public Label statusMessageLabel;
-    @FXML
-    public TextArea resultTextArea;
-    @FXML
-    public TextField calculateTimeField;
-    @FXML
-    public Label calculateTimeLabel;
-    @FXML
-    public RadioMenuItem polishRadioMenu;
-    @FXML
-    public RadioMenuItem englishRadioMenu;
-    @FXML
-    public CheckMenuItem alwaysOnTopMenuItem;
-    @FXML
-    public RadioMenuItem modernaRadioMenuItem;
-    @FXML
-    public RadioMenuItem caspianRadioMenuItem;
-    @FXML
-    public ToggleGroup styleGroup;
-    @FXML
-    public Label computeLabel;
-    @FXML
-    public ToggleGroup languageGroup;
-    @FXML
-    public MenuItem saveToFileMenuItem;
     private Main main = new Main();
+
+    @FXML
+    private Button showResultButton;
+    @FXML
+    private CheckBox singleThreadCheckBox;
+    @FXML
+    private CheckBox multiThreadCheckBox;
+    @FXML
+    private CheckBox autoThreadCheckBox;
+    @FXML
+    private TextField numberOfDigitsField;
+    @FXML
+    private Label numberOfDigitsLabel;
+    @FXML
+    private Label statusMessageLabel;
+    @FXML
+    private TextArea resultTextArea;
+    @FXML
+    private TextField calculateTimeField;
+    @FXML
+    private Label calculateTimeLabel;
+    @FXML
+    private RadioMenuItem polishRadioMenu;
+    @FXML
+    private RadioMenuItem englishRadioMenu;
+    @FXML
+    private CheckMenuItem alwaysOnTopMenuItem;
+    @FXML
+    private RadioMenuItem modernaRadioMenuItem;
+    @FXML
+    private RadioMenuItem caspianRadioMenuItem;
+    @FXML
+    private Label computeLabel;
+    @FXML
+    private MenuItem saveToFileMenuItem;
     @FXML
     private TextField numberField;
     @FXML
@@ -73,41 +67,6 @@ public class MainController implements Initializable {
             Effects.setDefault();
         }
     };
-
-//    private void loadingDialog(Thread th) {
-//        Effects.setBlur();
-//        Alert loadingAlert = new Alert(Alert.AlertType.WARNING);
-//        loadingAlert.initOwner(Main.getStage());
-//        loadingAlert.setTitle("Proszę czekać");
-//        loadingAlert.setHeaderText("Trwa obliczanie silni...");
-//        loadingAlert.setContentText("To może potrwać dłużej niż myślisz.");
-//        Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
-//        okButton.setText("Zamknij aplikację");
-//        loadingAlert.setOnCloseRequest(windowEvent -> {
-//            if (th.isAlive()) {
-//                Platform.exit();
-//                System.exit(0);
-//            }
-//        });
-//        Thread loadingThread = new Thread(() -> {
-//            try {
-//                th.join();
-//                if (loadingAlert.isShowing()) {
-//                    Platform.runLater(loadingAlert::close);
-//                }
-//            } catch (Exception exp) {
-//                exp.printStackTrace();
-//            }
-//        });
-//        loadingThread.setDaemon(true);
-//        loadingThread.start();
-//        Optional<ButtonType> result = loadingAlert.showAndWait();
-//        if (result.isPresent()) {
-//            Platform.exit();
-//            System.exit(0);
-//        }
-//        Effects.setDefault();
-//    }
 
     private static void aboutApplication() {
         Effects.setBlur();
@@ -130,7 +89,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void closeApplication() {
+    private void closeApplication() {
         Optional<ButtonType> exitButton = confirmationDialog();
         if (exitButton.get() == ButtonType.OK) {
             Platform.exit();
@@ -140,33 +99,54 @@ public class MainController implements Initializable {
         }
     }
 
-    @FXML
-    public void computeFactorial() {
+    private void loadingDialog(Thread th) {
         Effects.setBlur();
+        Alert loadingAlert = new Alert(Alert.AlertType.WARNING);
+        loadingAlert.initOwner(Main.getStage());
+        loadingAlert.setTitle("Proszę czekać");
+        loadingAlert.setHeaderText("Trwa obliczanie silni...");
+        loadingAlert.setContentText("To może potrwać dłużej niż myślisz.");
+        Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setText("Przerwij");
+        loadingAlert.setOnCloseRequest(windowEvent -> {
+            if (th.isAlive()) {
+                th.interrupt();
+            }
+        });
+        Thread loadingThread = new Thread(() -> {
+            try {
+                th.join();
+                if (loadingAlert.isShowing()) {
+                    Platform.runLater(loadingAlert::close);
+                }
+            } catch (Exception exp) {
+                exp.printStackTrace();
+            }
+        });
+        loadingThread.setDaemon(true);
+        loadingThread.start();
+        loadingAlert.showAndWait();
+
+        Effects.setDefault();
+    }
+
+    @FXML
+    private void computeFactorial() {
         //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
         ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
         long startTime;
         long endTime;
+
         startTime = System.currentTimeMillis();
-        if (ProgramData.autoThreadCheckBox) {
-            if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10) {
-                ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
-                ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
-//                Thread th = new Thread(() -> ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber));
-//                th.setDaemon(true);
-//                th.start();
-//                loadingDialog(th);
-            } else {
-                ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-                ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
-            }
-        } else if (ProgramData.singleThreadCheckBox) {
-            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
+        if (Integer.parseInt(ProgramData.factorialNumber) >= 20000) {
+            Thread th = new Thread(this::runCalculateFactorial);
+            th.setDaemon(true);
+            th.start();
+            loadingDialog(th);
         } else {
-            ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
-            ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
+            runCalculateFactorial();
         }
+
         endTime = System.currentTimeMillis();
 
         ProgramData.statusMessage = "factorial.statusMessageFinish";
@@ -203,49 +183,68 @@ public class MainController implements Initializable {
         numberOfDigitsLabel.setDisable(false);
         numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
         saveToFileMenuItem.setDisable(false);
-        Effects.setDefault();
+    }
+
+    private void runCalculateFactorial() {
+        if (isMultiThread()) {
+            ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
+            ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
+        } else {
+            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
+            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
+        }
+    }
+
+    private boolean isMultiThread() {
+        boolean multiThread;
+        if (ProgramData.autoThreadCheckBox) {
+            multiThread = Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10;
+        } else {
+            multiThread = !ProgramData.singleThreadCheckBox;
+        }
+        return multiThread;
     }
 
     @FXML
-    public void setModerna() {
+    private void setModerna() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         ProgramData.modernaStyle = true;
     }
 
     @FXML
-    public void setCaspian() {
+    private void setCaspian() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
         ProgramData.modernaStyle = false;
     }
 
     @FXML
-    public void about() {
+    private void about() {
         aboutApplication();
     }
 
     @FXML
-    public void setAlwaysOnTop(ActionEvent actionEvent) {
+    private void setAlwaysOnTop(ActionEvent actionEvent) {
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         Main.getStage().setAlwaysOnTop(isSelected);
         ProgramData.alwaysOnTop = isSelected;
     }
 
     @FXML
-    public void switchToPolish() {
+    private void switchToPolish() {
         ProgramData.polishLanguage = true;
         Bundle.bundle = Bundle.getResourceBundle("pl");
         main.changeLanguage("pl");
     }
 
     @FXML
-    public void switchToEnglish() {
+    private void switchToEnglish() {
         ProgramData.polishLanguage = false;
         Bundle.bundle = Bundle.getResourceBundle("en");
         main.changeLanguage("en");
     }
 
     @FXML
-    public void keyReleasedProperty(KeyEvent keyEvent) {
+    private void keyReleasedProperty(KeyEvent keyEvent) {
         boolean isDisabled = true;
         if (numberField.getText().matches("[0-9]*")) {
             ProgramData.statusMessage = "factorial.statusMessageGo";
@@ -282,7 +281,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void saveToFile() {
+    private void saveToFile() {
         Effects.setBlur();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(ProgramData.getSaveExtension(), "*.txt");
@@ -331,7 +330,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxAuto() {
+    private void checkBoxAuto() {
         autoThreadCheckBox.setSelected(true);
         singleThreadCheckBox.setSelected(false);
         multiThreadCheckBox.setSelected(false);
@@ -341,7 +340,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxSingle() {
+    private void checkBoxSingle() {
         autoThreadCheckBox.setSelected(false);
         singleThreadCheckBox.setSelected(true);
         multiThreadCheckBox.setSelected(false);
@@ -351,7 +350,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void checkBoxMulti() {
+    private void checkBoxMulti() {
         autoThreadCheckBox.setSelected(false);
         singleThreadCheckBox.setSelected(false);
         multiThreadCheckBox.setSelected(true);
@@ -361,7 +360,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void showResult() {
+    private void showResult() {
         ProgramData.disableResultTextArea = false;
         resultTextArea.setText(ProgramData.getResult());
         resultTextArea.setDisable(ProgramData.disableResultTextArea);

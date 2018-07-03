@@ -3,6 +3,7 @@ package pl.pwlctk;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -38,12 +39,22 @@ class CalculateFactorial {
 
             BigInteger result = BigInteger.ONE;
             for (Future<BigInteger> future : results) {
-                result = result.multiply(future.get());
+                try {
+                    result = result.multiply(future.get());
+                } catch (InterruptedException e) {
+
+                    // pomocy, co musze zrobić, aby to zatrzymać?
+                    //wyjątek leci, program działa i wyświetla mi się bee, ale procesor dalej jest obciążony w 100%
+                    //co zrobić, aby całkowicie zatrzymać ten thread bez wychodzenia z programu?
+                    System.out.println("Powinno przerwać liczenie silnii, aby procesor nie był obciążony w 100%");
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
             return result.toString();
 
-        } catch (Exception e) {
-            throw new AssertionError(e);
+
+
         } finally {
             service.shutdown();
         }
