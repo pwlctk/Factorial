@@ -26,6 +26,7 @@ class CalculateFactorial {
         ExecutorService service = Executors.newFixedThreadPool(processors.intValue());
         try {
             List<Future<BigInteger>> results = new ArrayList<>();
+
             for (BigInteger i = BigInteger.ONE; i.compareTo(n) <= 0; i = i.add(batchSize)) {
                 final BigInteger start = i;
                 final BigInteger end = n.add(BigInteger.ONE).min(i.add(batchSize));
@@ -41,19 +42,21 @@ class CalculateFactorial {
             for (Future<BigInteger> future : results) {
                 try {
                     result = result.multiply(future.get());
-                } catch (InterruptedException e) {
 
+                } catch (InterruptedException e) {
                     // pomocy, co musze zrobić, aby to zatrzymać?
                     //wyjątek leci, program działa i wyświetla mi się bee, ale procesor dalej jest obciążony w 100%
                     //co zrobić, aby całkowicie zatrzymać ten thread bez wychodzenia z programu?
-                    System.out.println("Powinno przerwać liczenie silnii, aby procesor nie był obciążony w 100%");
+
+
                 } catch (ExecutionException e) {
                     e.printStackTrace();
+                    service.shutdownNow();
+                    service.shutdown();
+
                 }
             }
             return result.toString();
-
-
 
         } finally {
             service.shutdown();
