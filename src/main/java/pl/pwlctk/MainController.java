@@ -129,7 +129,6 @@ public class MainController implements Initializable {
         ProgramData.numberOfDigitsIsDisabled = false;
         ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
 
-        resultTextArea.setDisable(ProgramData.disableResultTextArea);
         calculateTimeField.setText(endTime - startTime + " ms");
         calculateTimeField.setDisable(false);
         calculateTimeLabel.setDisable(false);
@@ -139,6 +138,7 @@ public class MainController implements Initializable {
         saveToFileMenuItem.setDisable(false);
 
         showResultButton();
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
     }
 
     private void showResultButton() {
