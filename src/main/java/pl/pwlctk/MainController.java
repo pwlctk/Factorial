@@ -101,13 +101,13 @@ public class MainController implements Initializable {
 
     private void loadingDialog(Thread th) {
         Effects.setBlur();
-        Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
+        Alert loadingAlert = new Alert(Alert.AlertType.WARNING);
         loadingAlert.initOwner(Main.getStage());
-        loadingAlert.setTitle(Bundle.bundle.getString("loading.wait"));
-        loadingAlert.setHeaderText(Bundle.bundle.getString("loading.computeFactorial"));
-        loadingAlert.setContentText(Bundle.bundle.getString("loading.message"));
+        loadingAlert.setTitle("Proszę czekać");
+        loadingAlert.setHeaderText("Trwa obliczanie silni...");
+        loadingAlert.setContentText("To może potrwać dłużej niż myślisz.");
         Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
-        okButton.setText(Bundle.bundle.getString("loading.stop"));
+        okButton.setText("Przerwij");
         loadingAlert.setOnCloseRequest(windowEvent -> {
             if (th.isAlive()) {
                 th.interrupt();
@@ -123,10 +123,9 @@ public class MainController implements Initializable {
                 exp.printStackTrace();
             }
         });
+        loadingThread.setDaemon(true);
         loadingThread.start();
         loadingAlert.showAndWait();
-
-
 
         Effects.setDefault();
     }
@@ -141,6 +140,7 @@ public class MainController implements Initializable {
         startTime = System.currentTimeMillis();
         if (Integer.parseInt(ProgramData.factorialNumber) >= 20000) {
             Thread th = new Thread(this::runCalculateFactorial);
+            th.setDaemon(true);
             th.start();
             loadingDialog(th);
         } else {
