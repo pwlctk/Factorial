@@ -123,7 +123,7 @@ public class MainController implements Initializable {
             statusMessageLabel.setText(ProgramData.getStatusMessage());
             isDisabled = (numberField.getText().isEmpty());
             if (keyEvent.getCode() == KeyCode.ENTER && !numberField.getText().isEmpty()) {
-                computeFactorial();
+                computeButton.fire();
             }
 
         } else {
