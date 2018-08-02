@@ -43,8 +43,6 @@ class CalculateFactorialMultiThreading {
 
                 } catch (InterruptedException e) {
                     service.shutdown();
-                    System.out.println("Interupted!");
-
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
@@ -57,7 +55,7 @@ class CalculateFactorialMultiThreading {
         }
     }
 
-    public static long getComputeTime() {
+    static long getComputeTime() {
         return computeTime;
     }
 }

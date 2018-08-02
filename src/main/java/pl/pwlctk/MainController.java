@@ -54,32 +54,14 @@ public class MainController implements Initializable {
     @FXML
     private Button computeButton;
 
-    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
-        Optional<ButtonType> closeResponse = confirmationDialog();
-        if (!ButtonType.OK.equals(closeResponse.get())) {
-            event.consume();
-            Effects.setDefault();
-        }
-    };
+    @FXML
+    private void computeFactorial() {
+        //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
+        ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
 
-    private static void aboutApplication() {
-        Effects.setBlur();
-        Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-        informationAlert.initOwner(Main.getStage());
-        informationAlert.setTitle(Bundle.bundle.getString("about.title"));
-        informationAlert.setHeaderText(Bundle.bundle.getString("about.header"));
-        informationAlert.setContentText(Bundle.bundle.getString("about.content"));
-        informationAlert.showAndWait();
-        Effects.setDefault();
-    }
-
-    private static Optional<ButtonType> confirmationDialog() {
-        Effects.setBlur();
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.initOwner(Main.getStage());
-        confirmationAlert.setTitle(Bundle.bundle.getString("exit.title"));
-        confirmationAlert.setHeaderText(Bundle.bundle.getString("exit.header"));
-        return confirmationAlert.showAndWait();
+        Thread th = new Thread(this::runCalculateFactorial);
+        th.start();
+        loadingDialog(th);
     }
 
     @FXML
@@ -91,106 +73,6 @@ public class MainController implements Initializable {
         } else {
             Effects.setDefault();
         }
-    }
-
-    private void loadingDialog(Thread th) {
-        Effects.setBlur();
-        Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
-        loadingAlert.initOwner(Main.getStage());
-        loadingAlert.setTitle(Bundle.bundle.getString("loading.wait"));
-        loadingAlert.setHeaderText(Bundle.bundle.getString("loading.computeFactorial"));
-        loadingAlert.setContentText(Bundle.bundle.getString("loading.message"));
-        Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
-        okButton.setText(Bundle.bundle.getString("loading.stop"));
-//        loadingAlert.setOnCloseRequest(event -> {
-//            if(th.isAlive()) {
-//                th.interrupt();
-//                System.out.println("dupa");
-//                calculationFactorialCancelled();
-//            }
-//
-//
-//
-//        });
-
-        Thread loadingThread = new Thread(() -> {
-            try {
-                th.join();
-                Platform.runLater(loadingAlert::close);
-            } catch (Exception exp) {
-                exp.printStackTrace();
-            }
-        });
-        loadingThread.start();
-
-        Optional<ButtonType> result = loadingAlert.showAndWait();
-        if (!result.isPresent()) {
-            if(th.isAlive()) {
-                th.interrupt();
-                calculationFactorialCancelled();
-            } else {
-                calculationFactorialCompleted();
-            }
-
-        } else if (result.get() == ButtonType.OK) {
-            th.interrupt();
-            calculationFactorialCancelled();
-        }
-
-        Effects.setDefault();
-    }
-
-    @FXML
-    private void computeFactorial() {
-        //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
-        ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
-
-        Thread th = new Thread(this::runCalculateFactorial);
-        th.start();
-        loadingDialog(th);
-    }
-
-    private void calculationFactorialCancelled() {
-        ProgramData.statusMessage = "factorial.statusMessageCanceled";
-        ProgramData.calculateTimeFieldIsDisabled = true;
-        ProgramData.calculateTimeLabelIsDisabled = true;
-        ProgramData.numberOfDigitsLabelIsDisabled = true;
-        ProgramData.numberOfDigitsIsDisabled = true;
-        ProgramData.computeLabelVisibility = true;
-        ProgramData.showResultButton = false;
-        ProgramData.disableResultTextArea = true;
-        ProgramData.result = "";
-        ProgramData.numberOfDigitsText = "";
-        ProgramData.saveToFileMenuItemIsDisabled = true;
-        ProgramData.calculateTimeFieldText = "";
-        initializeProgramData();
-    }
-
-    private void calculationFactorialCompleted() {
-        ProgramData.statusMessage = "factorial.statusMessageFinish";
-        ProgramData.computeLabelVisibility = true;
-        ProgramData.calculateTimeLabelIsDisabled = false;
-        ProgramData.calculateTimeFieldIsDisabled = false;
-        ProgramData.numberOfDigitsLabelIsDisabled = false;
-        ProgramData.numberOfDigitsIsDisabled = false;
-        ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
-
-        if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER) {
-            ProgramData.showResultButton = true;
-            ProgramData.disableResultTextArea = true;
-
-        } else {
-            ProgramData.showResultButton = false;
-            ProgramData.disableResultTextArea = false;
-        }
-        ProgramData.saveToFileMenuItemIsDisabled = false;
-        ProgramData.calculateTimeFieldText = (CalculateFactorialMultiThreading.getComputeTime()) + " ms";
-
-        initializeProgramData();
-    }
-
-    private void runCalculateFactorial() {
-        ProgramData.result = CalculateFactorialMultiThreading.calculateFactorial(ProgramData.factorialNumber);
     }
 
     @FXML
@@ -231,6 +113,8 @@ public class MainController implements Initializable {
         main.changeLanguage("en");
     }
 
+
+    //metoda do refactoringu
     @FXML
     private void keyReleasedProperty(KeyEvent keyEvent) {
         boolean isDisabled = true;
@@ -285,9 +169,18 @@ public class MainController implements Initializable {
         Effects.setDefault();
     }
 
+    @FXML
+    private void showResult() {
+        ProgramData.disableResultTextArea = false;
+        resultTextArea.setText(ProgramData.getResult());
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
+        ProgramData.showResultButton = false;
+        showResultButton.setVisible(ProgramData.showResultButton);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // int threads = Runtime.getRuntime().availableProcessors();
+        statusMessageLabel.setText(ProgramData.getStatusMessage());
         Platform.runLater(() -> numberField.requestFocus());
         Main.getStage().setOnCloseRequest(confirmCloseEventHandler);
 
@@ -317,12 +210,122 @@ public class MainController implements Initializable {
         statusMessageLabel.setText(ProgramData.getStatusMessage());
     }
 
-    @FXML
-    private void showResult() {
-        ProgramData.disableResultTextArea = false;
-        resultTextArea.setText(ProgramData.getResult());
-        resultTextArea.setDisable(ProgramData.disableResultTextArea);
+    private void calculationFactorialCancelled() {
+        ProgramData.statusMessage = "factorial.statusMessageCanceled";
+        ProgramData.calculateTimeFieldIsDisabled = true;
+        ProgramData.calculateTimeLabelIsDisabled = true;
+        ProgramData.numberOfDigitsLabelIsDisabled = true;
+        ProgramData.numberOfDigitsIsDisabled = true;
+        ProgramData.computeLabelVisibility = true;
         ProgramData.showResultButton = false;
-        showResultButton.setVisible(ProgramData.showResultButton);
+        ProgramData.disableResultTextArea = true;
+        ProgramData.result = "";
+        ProgramData.numberOfDigitsText = "";
+        ProgramData.saveToFileMenuItemIsDisabled = true;
+        ProgramData.calculateTimeFieldText = "";
+        initializeProgramData();
     }
+
+    private void calculationFactorialCompleted() {
+        ProgramData.statusMessage = "factorial.statusMessageFinish";
+        ProgramData.computeLabelVisibility = true;
+        ProgramData.calculateTimeLabelIsDisabled = false;
+        ProgramData.calculateTimeFieldIsDisabled = false;
+        ProgramData.numberOfDigitsLabelIsDisabled = false;
+        ProgramData.numberOfDigitsIsDisabled = false;
+        ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
+
+        if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER) {
+            ProgramData.showResultButton = true;
+            ProgramData.disableResultTextArea = true;
+
+        } else {
+            ProgramData.showResultButton = false;
+            ProgramData.disableResultTextArea = false;
+        }
+        ProgramData.saveToFileMenuItemIsDisabled = false;
+        ProgramData.calculateTimeFieldText = (CalculateFactorialMultiThreading.getComputeTime()) + " ms";
+
+        initializeProgramData();
+    }
+
+    private void runCalculateFactorial() {
+        ProgramData.result = CalculateFactorialMultiThreading.calculateFactorial(ProgramData.factorialNumber);
+    }
+
+    private static void aboutApplication() {
+        Effects.setBlur();
+        Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+        informationAlert.initOwner(Main.getStage());
+        informationAlert.setTitle(Bundle.bundle.getString("about.title"));
+        informationAlert.setHeaderText(Bundle.bundle.getString("about.header"));
+        int threads = Runtime.getRuntime().availableProcessors();
+        informationAlert.setContentText(Bundle.bundle.getString("about.content") + " " + threads);
+        informationAlert.showAndWait();
+        Effects.setDefault();
+    }
+
+    private static Optional<ButtonType> confirmationDialog() {
+        Effects.setBlur();
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.initOwner(Main.getStage());
+        confirmationAlert.setTitle(Bundle.bundle.getString("exit.title"));
+        confirmationAlert.setHeaderText(Bundle.bundle.getString("exit.header"));
+        return confirmationAlert.showAndWait();
+    }
+
+    //metoda do refactoringu
+    private void loadingDialog(Thread th) {
+        if (Integer.parseInt(ProgramData.factorialNumber) < BIG_NUMBER) {
+            try {
+                th.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            calculationFactorialCompleted();
+
+        } else {
+            Effects.setBlur();
+            Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
+            loadingAlert.initOwner(Main.getStage());
+            loadingAlert.setTitle(Bundle.bundle.getString("loading.wait"));
+            loadingAlert.setHeaderText(Bundle.bundle.getString("loading.computeFactorial"));
+            loadingAlert.setContentText(Bundle.bundle.getString("loading.message"));
+            Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText(Bundle.bundle.getString("loading.stop"));
+            Thread loadingThread = new Thread(() -> {
+                try {
+                    th.join();
+                    Platform.runLater(loadingAlert::close);
+                } catch (Exception exp) {
+                    exp.printStackTrace();
+                }
+            });
+            loadingThread.start();
+
+            Optional<ButtonType> result = loadingAlert.showAndWait();
+            if (!result.isPresent()) {
+                if (th.isAlive()) {
+                    th.interrupt();
+                    calculationFactorialCancelled();
+                } else {
+                    calculationFactorialCompleted();
+                }
+
+            } else if (result.get() == ButtonType.OK) {
+                th.interrupt();
+                calculationFactorialCancelled();
+            }
+
+            Effects.setDefault();
+        }
+    }
+
+    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
+        Optional<ButtonType> closeResponse = confirmationDialog();
+        if (!ButtonType.OK.equals(closeResponse.get())) {
+            event.consume();
+            Effects.setDefault();
+        }
+    };
 }
