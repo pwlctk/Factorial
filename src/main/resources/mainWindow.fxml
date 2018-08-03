@@ -28,12 +28,16 @@
                 </MenuItem>
             </Menu>
             <Menu mnemonicParsing="false" text="%edit">
-                <RadioMenuItem fx:id="modernaRadioMenuItem" mnemonicParsing="false" onAction="#setModerna" selected="true" text="%moderna">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="styleGroup" />
-                    </toggleGroup>
-                </RadioMenuItem>
-                <RadioMenuItem fx:id="caspianRadioMenuItem" mnemonicParsing="false" onAction="#setCaspian" text="%caspian" toggleGroup="$styleGroup" />
+            <Menu mnemonicParsing="false" text="%style">
+              <items>
+                      <RadioMenuItem fx:id="caspianRadioMenuItem" mnemonicParsing="false" onAction="#setCaspian" text="%caspian">
+                     <toggleGroup>
+                              <ToggleGroup fx:id="styleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                      <RadioMenuItem fx:id="modernaRadioMenuItem" mnemonicParsing="false" onAction="#setModerna" selected="true" text="%moderna" toggleGroup="$styleGroup" />
+              </items>
+            </Menu>
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <Menu mnemonicParsing="false" text="%language">
                     <RadioMenuItem fx:id="polishRadioMenu" mnemonicParsing="false" onAction="#switchToPolish" selected="true" text="%language.polish">
