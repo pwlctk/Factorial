@@ -43,8 +43,8 @@ class ProgramData {
         return Bundle.bundle.getString("longComputeTimeWarningLabel");
     }
 
-    static String getMessage() {
-        return Bundle.bundle.getString(statusMessage);
-    }
+//    static String getMessage() {
+//        return Bundle.bundle.getString(statusMessage);
+//    }
 
 }

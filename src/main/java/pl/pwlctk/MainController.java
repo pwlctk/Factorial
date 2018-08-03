@@ -62,6 +62,8 @@ public class MainController implements Initializable {
         Thread th = new Thread(this::runCalculateFactorial);
         th.start();
         loadingDialog(th);
+        Platform.runLater(() -> numberField.requestFocus());
+        Platform.runLater(() -> numberField.selectAll());
     }
 
     @FXML
@@ -139,17 +141,19 @@ public class MainController implements Initializable {
             ProgramData.computeLabelVisibility = true;
             computeLabel.setVisible(true);
             computeLabel.setText(ProgramData.getWarningMessage());
+            ProgramData.statusMessage = "longComputeTimeWarningLabel";
 
         } else if (!numberField.getText().matches("[0-9]*")) {
             ProgramData.computeLabelVisibility = true;
             computeLabel.setVisible(true);
-            computeLabel.setText(ProgramData.getMessage());
+            computeLabel.setText(ProgramData.getStatusMessage());
         } else if (keyEvent.getCode() != KeyCode.ENTER) {
             computeLabel.setVisible(false);
             ProgramData.computeLabelVisibility = false;
         }
         computeButton.setDisable(isDisabled);
         ProgramData.computeButtonIsDisabled = isDisabled;
+        ProgramData.factorialNumber = numberField.getText();
     }
 
     @FXML
@@ -192,7 +196,7 @@ public class MainController implements Initializable {
         caspianRadioMenuItem.setSelected(!ProgramData.modernaStyle);
         polishRadioMenu.setSelected(ProgramData.polishLanguage);
         englishRadioMenu.setSelected(!ProgramData.polishLanguage);
-        computeLabel.setText(ProgramData.getMessage());
+        computeLabel.setText(ProgramData.getStatusMessage());
         alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
         resultTextArea.setText(ProgramData.getResult());
         numberField.setText(ProgramData.factorialNumber);
