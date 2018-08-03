@@ -7,7 +7,7 @@ class ProgramData {
     static String result = "";
     static boolean computeButtonIsDisabled = true;
     static boolean calculateTimeFieldIsDisabled = true;
-    static String calculateTimeFieldText;
+    static String calculateTimeFieldText = "";
     static boolean calculateTimeLabelIsDisabled = true;
     static boolean numberOfDigitsLabelIsDisabled = true;
     static String numberOfDigitsText = "";
@@ -15,21 +15,9 @@ class ProgramData {
     static boolean computeLabelVisibility = false;
     static String statusMessage = "factorial.statusMessageReady";
     static String factorialNumber = "";
-    static String threadsStatusMessage = "";
-    static boolean singleThreadCheckBox;
-    static boolean multiThreadCheckBox;
-    static boolean autoThreadCheckBox = true;
     static boolean showResultButton = false;
     static boolean disableResultTextArea = true;
-
-
-    static String getThreadsStatusMessage() {
-        if (threadsStatusMessage.isEmpty()) {
-            return "";
-        } else {
-            return Bundle.bundle.getString(threadsStatusMessage);
-        }
-    }
+    static boolean saveToFileMenuItemIsDisabled = true;
 
     static String getResult() {
         if (disableResultTextArea) {
@@ -37,10 +25,6 @@ class ProgramData {
         } else {
             return result;
         }
-    }
-
-    static String getThreadsLabel() {
-        return Bundle.bundle.getString("threads.multi");
     }
 
     static String getStatusMessage() {
@@ -59,8 +43,8 @@ class ProgramData {
         return Bundle.bundle.getString("longComputeTimeWarningLabel");
     }
 
-    static String getMessage() {
-        return Bundle.bundle.getString(statusMessage);
-    }
+//    static String getMessage() {
+//        return Bundle.bundle.getString(statusMessage);
+//    }
 
 }

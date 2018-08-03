@@ -18,83 +18,56 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-    private final int BIG_NUMBER = 100000;
+    private final int BIG_NUMBER = 200000;
     private Main main = new Main();
+
     @FXML
-    public Button showResultButton;
+    private Button showResultButton;
     @FXML
-    public Label mainLabel;
+    private TextField numberOfDigitsField;
     @FXML
-    public CheckBox singleThreadCheckBox;
+    private Label numberOfDigitsLabel;
     @FXML
-    public CheckBox multiThreadCheckBox;
+    private Label statusMessageLabel;
     @FXML
-    public CheckBox autoThreadCheckBox;
+    private TextArea resultTextArea;
     @FXML
-    public TextField numberOfDigitsField;
+    private TextField calculateTimeField;
     @FXML
-    public Label numberOfDigitsLabel;
+    private Label calculateTimeLabel;
     @FXML
-    public Label statusMessageLabel;
+    private RadioMenuItem polishRadioMenu;
     @FXML
-    public TextArea resultTextArea;
+    private RadioMenuItem englishRadioMenu;
     @FXML
-    public TextField calculateTimeField;
+    private CheckMenuItem alwaysOnTopMenuItem;
     @FXML
-    public Label calculateTimeLabel;
+    private RadioMenuItem modernaRadioMenuItem;
     @FXML
-    public RadioMenuItem polishRadioMenu;
+    private RadioMenuItem caspianRadioMenuItem;
     @FXML
-    public RadioMenuItem englishRadioMenu;
+    private Label computeLabel;
     @FXML
-    public CheckMenuItem alwaysOnTopMenuItem;
-    @FXML
-    public RadioMenuItem modernaRadioMenuItem;
-    @FXML
-    public RadioMenuItem caspianRadioMenuItem;
-    @FXML
-    public ToggleGroup styleGroup;
-    @FXML
-    public Label computeLabel;
-    @FXML
-    public ToggleGroup languageGroup;
-    @FXML
-    public MenuItem saveToFileMenuItem;
+    private MenuItem saveToFileMenuItem;
     @FXML
     private TextField numberField;
     @FXML
     private Button computeButton;
 
-    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
-        Optional<ButtonType> closeResponse = confirmationDialog();
-        if (!ButtonType.OK.equals(closeResponse.get())) {
-            event.consume();
-            Effects.setDefault();
-        }
-    };
+    @FXML
+    private void computeFactorial() {
+        //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
+        ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
 
-    private static void aboutApplication() {
-        Effects.setBlur();
-        Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-        informationAlert.initOwner(Main.getStage());
-        informationAlert.setTitle(Bundle.bundle.getString("about.title"));
-        informationAlert.setHeaderText(Bundle.bundle.getString("about.header"));
-        informationAlert.setContentText(Bundle.bundle.getString("about.content"));
-        informationAlert.showAndWait();
-        Effects.setDefault();
-    }
-
-    private static Optional<ButtonType> confirmationDialog() {
-        Effects.setBlur();
-        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmationAlert.initOwner(Main.getStage());
-        confirmationAlert.setTitle(Bundle.bundle.getString("exit.title"));
-        confirmationAlert.setHeaderText(Bundle.bundle.getString("exit.header"));
-        return confirmationAlert.showAndWait();
+        Thread th = new Thread(this::runCalculateFactorial);
+        th.start();
+        loadingDialog(th);
+        Platform.runLater(() -> numberField.requestFocus());
+        Platform.runLater(() -> numberField.selectAll());
     }
 
     @FXML
-    public void closeApplication() {
+    private void closeApplication() {
         Optional<ButtonType> exitButton = confirmationDialog();
         if (exitButton.get() == ButtonType.OK) {
             Platform.exit();
@@ -105,115 +78,54 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void computeFactorial() {
-        //zamieniam na inta i pozniej z powrotem na Stringa, aby pozbyć się możliwych zer na początku
-        ProgramData.factorialNumber = String.valueOf(Integer.parseInt(numberField.getText()));
-        long startTime;
-        long endTime;
-        startTime = System.currentTimeMillis();
-
-
-        if (ProgramData.autoThreadCheckBox) {
-            if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER / 10) {
-                ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
-                ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
-            } else {
-                ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-                ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
-            }
-        } else if (ProgramData.singleThreadCheckBox) {
-            ProgramData.threadsStatusMessage = "threads.statusMessageSingle";
-            ProgramData.result = CalculateFactorial.calculateFactorialSingleThreading(ProgramData.factorialNumber);
-        } else {
-            ProgramData.threadsStatusMessage = "threads.statusMessageMulti";
-            ProgramData.result = CalculateFactorial.calculateFactorialMultiThreading(ProgramData.factorialNumber);
-        }
-
-        endTime = System.currentTimeMillis();
-
-        ProgramData.statusMessage = "factorial.statusMessageFinish";
-        ProgramData.computeLabelVisibility = true;
-        computeLabel.setVisible(ProgramData.computeLabelVisibility);
-        computeLabel.setText(ProgramData.getMessage());
-
-        statusMessageLabel.setText(ProgramData.getStatusMessage() + ProgramData.getThreadsStatusMessage());
-        ProgramData.calculateTimeLabelIsDisabled = false;
-        ProgramData.calculateTimeFieldIsDisabled = false;
-        ProgramData.calculateTimeFieldText = endTime - startTime + " ms";
-        ProgramData.numberOfDigitsLabelIsDisabled = false;
-        ProgramData.numberOfDigitsIsDisabled = false;
-        ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
-
-        if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER) {
-            ProgramData.showResultButton = true;
-            showResultButton.setVisible(ProgramData.showResultButton);
-            resultTextArea.setText("");
-            ProgramData.disableResultTextArea = true;
-
-        } else {
-            ProgramData.showResultButton = false;
-            showResultButton.setVisible(ProgramData.showResultButton);
-            resultTextArea.setText(ProgramData.result);
-            ProgramData.disableResultTextArea = false;
-        }
-        resultTextArea.setDisable(ProgramData.disableResultTextArea);
-
-        calculateTimeField.setText(endTime - startTime + " ms");
-        calculateTimeField.setDisable(false);
-        calculateTimeLabel.setDisable(false);
-        numberOfDigitsField.setDisable(false);
-        numberOfDigitsLabel.setDisable(false);
-        numberOfDigitsField.setText(ProgramData.numberOfDigitsText);
-        saveToFileMenuItem.setDisable(false);
-    }
-
-    @FXML
-    public void setModerna() {
+    private void setModerna() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         ProgramData.modernaStyle = true;
     }
 
     @FXML
-    public void setCaspian() {
+    private void setCaspian() {
         Application.setUserAgentStylesheet(Application.STYLESHEET_CASPIAN);
         ProgramData.modernaStyle = false;
     }
 
     @FXML
-    public void about() {
+    private void about() {
         aboutApplication();
     }
 
     @FXML
-    public void setAlwaysOnTop(ActionEvent actionEvent) {
+    private void setAlwaysOnTop(ActionEvent actionEvent) {
         boolean isSelected = ((CheckMenuItem) actionEvent.getSource()).isSelected();
         Main.getStage().setAlwaysOnTop(isSelected);
         ProgramData.alwaysOnTop = isSelected;
     }
 
     @FXML
-    public void switchToPolish() {
+    private void switchToPolish() {
         ProgramData.polishLanguage = true;
         Bundle.bundle = Bundle.getResourceBundle("pl");
         main.changeLanguage("pl");
     }
 
     @FXML
-    public void switchToEnglish() {
+    private void switchToEnglish() {
         ProgramData.polishLanguage = false;
         Bundle.bundle = Bundle.getResourceBundle("en");
         main.changeLanguage("en");
     }
 
+
+    //metoda do refactoringu
     @FXML
-    public void keyReleasedProperty(KeyEvent keyEvent) {
+    private void keyReleasedProperty(KeyEvent keyEvent) {
         boolean isDisabled = true;
         if (numberField.getText().matches("[0-9]*")) {
             ProgramData.statusMessage = "factorial.statusMessageGo";
             statusMessageLabel.setText(ProgramData.getStatusMessage());
             isDisabled = (numberField.getText().isEmpty());
             if (keyEvent.getCode() == KeyCode.ENTER && !numberField.getText().isEmpty()) {
-                computeFactorial();
+                computeButton.fire();
             }
 
         } else {
@@ -229,21 +141,23 @@ public class MainController implements Initializable {
             ProgramData.computeLabelVisibility = true;
             computeLabel.setVisible(true);
             computeLabel.setText(ProgramData.getWarningMessage());
+            ProgramData.statusMessage = "longComputeTimeWarningLabel";
 
         } else if (!numberField.getText().matches("[0-9]*")) {
             ProgramData.computeLabelVisibility = true;
             computeLabel.setVisible(true);
-            computeLabel.setText(ProgramData.getMessage());
+            computeLabel.setText(ProgramData.getStatusMessage());
         } else if (keyEvent.getCode() != KeyCode.ENTER) {
             computeLabel.setVisible(false);
             ProgramData.computeLabelVisibility = false;
         }
         computeButton.setDisable(isDisabled);
         ProgramData.computeButtonIsDisabled = isDisabled;
+        ProgramData.factorialNumber = numberField.getText();
     }
 
     @FXML
-    public void saveToFile() {
+    private void saveToFile() {
         Effects.setBlur();
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(ProgramData.getSaveExtension(), "*.txt");
@@ -259,23 +173,30 @@ public class MainController implements Initializable {
         Effects.setDefault();
     }
 
+    @FXML
+    private void showResult() {
+        ProgramData.disableResultTextArea = false;
+        resultTextArea.setText(ProgramData.getResult());
+        resultTextArea.setDisable(ProgramData.disableResultTextArea);
+        ProgramData.showResultButton = false;
+        showResultButton.setVisible(ProgramData.showResultButton);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        int threads = Runtime.getRuntime().availableProcessors();
+        statusMessageLabel.setText(ProgramData.getStatusMessage());
         Platform.runLater(() -> numberField.requestFocus());
         Main.getStage().setOnCloseRequest(confirmCloseEventHandler);
 
-        multiThreadCheckBox.setText(ProgramData.getThreadsLabel() + " (" + threads + ")");
-        singleThreadCheckBox.setSelected(ProgramData.singleThreadCheckBox);
-        multiThreadCheckBox.setSelected(ProgramData.multiThreadCheckBox);
-        autoThreadCheckBox.setSelected(ProgramData.autoThreadCheckBox);
-        statusMessageLabel.setText(ProgramData.getStatusMessage() + ProgramData.getThreadsStatusMessage());
+        initializeProgramData();
+    }
+
+    private void initializeProgramData() {
         modernaRadioMenuItem.setSelected(ProgramData.modernaStyle);
         caspianRadioMenuItem.setSelected(!ProgramData.modernaStyle);
         polishRadioMenu.setSelected(ProgramData.polishLanguage);
         englishRadioMenu.setSelected(!ProgramData.polishLanguage);
-        saveToFileMenuItem.setDisable(ProgramData.result.isEmpty());
-        computeLabel.setText(ProgramData.getMessage());
+        computeLabel.setText(ProgramData.getStatusMessage());
         alwaysOnTopMenuItem.setSelected(ProgramData.alwaysOnTop);
         resultTextArea.setText(ProgramData.getResult());
         numberField.setText(ProgramData.factorialNumber);
@@ -289,45 +210,126 @@ public class MainController implements Initializable {
         computeLabel.setVisible(ProgramData.computeLabelVisibility);
         showResultButton.setVisible(ProgramData.showResultButton);
         resultTextArea.setDisable(ProgramData.disableResultTextArea);
+        saveToFileMenuItem.setDisable(ProgramData.saveToFileMenuItemIsDisabled);
+        statusMessageLabel.setText(ProgramData.getStatusMessage());
     }
 
-    @FXML
-    public void checkBoxAuto() {
-        autoThreadCheckBox.setSelected(true);
-        singleThreadCheckBox.setSelected(false);
-        multiThreadCheckBox.setSelected(false);
-        ProgramData.autoThreadCheckBox = true;
-        ProgramData.singleThreadCheckBox = false;
-        ProgramData.multiThreadCheckBox = false;
-    }
-
-    @FXML
-    public void checkBoxSingle() {
-        autoThreadCheckBox.setSelected(false);
-        singleThreadCheckBox.setSelected(true);
-        multiThreadCheckBox.setSelected(false);
-        ProgramData.autoThreadCheckBox = false;
-        ProgramData.singleThreadCheckBox = true;
-        ProgramData.multiThreadCheckBox = false;
-    }
-
-    @FXML
-    public void checkBoxMulti() {
-        autoThreadCheckBox.setSelected(false);
-        singleThreadCheckBox.setSelected(false);
-        multiThreadCheckBox.setSelected(true);
-        ProgramData.autoThreadCheckBox = false;
-        ProgramData.singleThreadCheckBox = false;
-        ProgramData.multiThreadCheckBox = true;
-    }
-
-    @FXML
-    public void showResult() {
-        ProgramData.disableResultTextArea = false;
-        resultTextArea.setText(ProgramData.getResult());
-        resultTextArea.setDisable(ProgramData.disableResultTextArea);
+    private void calculationFactorialCancelled() {
+        ProgramData.statusMessage = "factorial.statusMessageCanceled";
+        ProgramData.calculateTimeFieldIsDisabled = true;
+        ProgramData.calculateTimeLabelIsDisabled = true;
+        ProgramData.numberOfDigitsLabelIsDisabled = true;
+        ProgramData.numberOfDigitsIsDisabled = true;
+        ProgramData.computeLabelVisibility = true;
         ProgramData.showResultButton = false;
-        showResultButton.setVisible(ProgramData.showResultButton);
-
+        ProgramData.disableResultTextArea = true;
+        ProgramData.result = "";
+        ProgramData.numberOfDigitsText = "";
+        ProgramData.saveToFileMenuItemIsDisabled = true;
+        ProgramData.calculateTimeFieldText = "";
+        initializeProgramData();
     }
+
+    private void calculationFactorialCompleted() {
+        ProgramData.statusMessage = "factorial.statusMessageFinish";
+        ProgramData.computeLabelVisibility = true;
+        ProgramData.calculateTimeLabelIsDisabled = false;
+        ProgramData.calculateTimeFieldIsDisabled = false;
+        ProgramData.numberOfDigitsLabelIsDisabled = false;
+        ProgramData.numberOfDigitsIsDisabled = false;
+        ProgramData.numberOfDigitsText = ProgramData.result.length() + "";
+
+        if (Integer.parseInt(ProgramData.factorialNumber) >= BIG_NUMBER) {
+            ProgramData.showResultButton = true;
+            ProgramData.disableResultTextArea = true;
+
+        } else {
+            ProgramData.showResultButton = false;
+            ProgramData.disableResultTextArea = false;
+        }
+        ProgramData.saveToFileMenuItemIsDisabled = false;
+        ProgramData.calculateTimeFieldText = (CalculateFactorialMultiThreading.getComputeTime()) + " ms";
+
+        initializeProgramData();
+    }
+
+    private void runCalculateFactorial() {
+        ProgramData.result = CalculateFactorialMultiThreading.calculateFactorial(ProgramData.factorialNumber);
+    }
+
+    private static void aboutApplication() {
+        Effects.setBlur();
+        Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+        informationAlert.initOwner(Main.getStage());
+        informationAlert.setTitle(Bundle.bundle.getString("about.title"));
+        informationAlert.setHeaderText(Bundle.bundle.getString("about.header"));
+        int threads = Runtime.getRuntime().availableProcessors();
+        informationAlert.setContentText(Bundle.bundle.getString("about.content") + " " + threads);
+        informationAlert.showAndWait();
+        Effects.setDefault();
+    }
+
+    private static Optional<ButtonType> confirmationDialog() {
+        Effects.setBlur();
+        Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.initOwner(Main.getStage());
+        confirmationAlert.setTitle(Bundle.bundle.getString("exit.title"));
+        confirmationAlert.setHeaderText(Bundle.bundle.getString("exit.header"));
+        return confirmationAlert.showAndWait();
+    }
+
+    //metoda do refactoringu
+    private void loadingDialog(Thread th) {
+        if (Integer.parseInt(ProgramData.factorialNumber) < BIG_NUMBER) {
+            try {
+                th.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            calculationFactorialCompleted();
+
+        } else {
+            Effects.setBlur();
+            Alert loadingAlert = new Alert(Alert.AlertType.INFORMATION);
+            loadingAlert.initOwner(Main.getStage());
+            loadingAlert.setTitle(Bundle.bundle.getString("loading.wait"));
+            loadingAlert.setHeaderText(Bundle.bundle.getString("loading.computeFactorial"));
+            loadingAlert.setContentText(Bundle.bundle.getString("loading.message"));
+            Button okButton = (Button) loadingAlert.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.setText(Bundle.bundle.getString("loading.stop"));
+            Thread loadingThread = new Thread(() -> {
+                try {
+                    th.join();
+                    Platform.runLater(loadingAlert::close);
+                } catch (Exception exp) {
+                    exp.printStackTrace();
+                }
+            });
+            loadingThread.start();
+
+            Optional<ButtonType> result = loadingAlert.showAndWait();
+            if (!result.isPresent()) {
+                if (th.isAlive()) {
+                    th.interrupt();
+                    calculationFactorialCancelled();
+                } else {
+                    calculationFactorialCompleted();
+                }
+
+            } else if (result.get() == ButtonType.OK) {
+                th.interrupt();
+                calculationFactorialCancelled();
+            }
+
+            Effects.setDefault();
+        }
+    }
+
+    private EventHandler<WindowEvent> confirmCloseEventHandler = event -> {
+        Optional<ButtonType> closeResponse = confirmationDialog();
+        if (!ButtonType.OK.equals(closeResponse.get())) {
+            event.consume();
+            Effects.setDefault();
+        }
+    };
 }
